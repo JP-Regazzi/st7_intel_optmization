@@ -10,7 +10,8 @@ DEFAULT_SIZE = 4096
 def extract_fitness(text):
     pattern = r'(\d+(\.\d+)?)\s*GFlops'
     fitness = re.search(pattern, text).group()
-    return fitness
+    result = re.search(r'(\d+\.\d+)', fitness)
+    return result
 
 def deploySUBP(cache_blocking, n_items=100, n_threads=32, verbose=0):
     """
