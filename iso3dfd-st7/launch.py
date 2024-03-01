@@ -18,13 +18,13 @@ def getFitness(cache_blocking, n_items=100, n_threads=32, verbose=0):
     """
     msg = f"Parameters: \n\t- Number of threads: {n_threads} \n\t- Number of items: {n_items} \n\t- Cache blocking: {cache_blocking}"
     cmd = f"bin/iso3dfd_dev13_cpu_avx2.exe {NB_OF_PB} {NB_OF_PB} {NB_OF_PB} {n_threads} {n_items} {cache_blocking[0]} {cache_blocking[1]} {cache_blocking[2]}"
-    res = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)
-    output = str(res.stdout,'utf-8')
-    fitness = extract_fitness(output)
     if verbose:
         print(f"Executed command: {cmd}")
         print(msg)
-        print(f"Fitness: {fitness}")
+    res = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE)
+    output = str(res.stdout,'utf-8')
+    fitness = extract_fitness(output)
+    if verbose: print(f"Fitness: {fitness}")
     return float(fitness)
 
 def cmdLineParsing():

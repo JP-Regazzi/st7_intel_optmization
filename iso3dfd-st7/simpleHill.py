@@ -46,7 +46,7 @@ if __name__ == "__main__":
     seed = args.seed
     # Random starting point in (0, 100)
     random.seed(seed)
-    start_x, start_y, start_z = random.uniform(0, 100), random.uniform(0, 100), random.uniform(0, 100)
+    start_x, start_y, start_z = random.uniform(1, 100), random.uniform(1, 100), random.uniform(1, 100)
     final_x, final_y, final_z, final_fitness = hill_climbing_3d(start_x, start_y, start_z)
     print(f"Final position: ({final_x}, {final_y}, {final_z}) with fitness {final_fitness}")
 
