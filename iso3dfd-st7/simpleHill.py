@@ -14,7 +14,7 @@ def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=0.01):
                 for dz in [-step_size, 0, step_size]:
                     if dx == 0 and dy == 0 and dz == 0:
                         continue  # Skip the current point itself
-                    new_x, new_y, new_z = current_x + dx, current_y + dy, current_z + dz
+                    new_x, new_y, new_z = current_x, current_y + dy, current_z + dz # x stays constant
                     neighbors.append((new_x, new_y, new_z))
         
         # Evaluate all neighbors and move to the best one
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     seed = args.seed
     # Random starting point in (0, 100)
     random.seed(seed)
-    start_x, start_y, start_z = random.uniform(1, 100), random.uniform(1, 100), random.uniform(1, 100)
+    start_x, start_y, start_z = 32, random.randrange(1, 128), random.randrange(1, 128)
     final_x, final_y, final_z, final_fitness = hill_climbing_3d(start_x, start_y, start_z)
     print(f"Final position: ({final_x}, {final_y}, {final_z}) with fitness {final_fitness}")
 
