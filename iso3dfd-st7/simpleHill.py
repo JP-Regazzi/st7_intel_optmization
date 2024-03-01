@@ -1,5 +1,5 @@
 import random
-from launch import getFitness
+from launch import fitness
 import argparse
 
 def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=0.01):
