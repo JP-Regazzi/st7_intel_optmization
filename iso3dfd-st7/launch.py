@@ -10,7 +10,7 @@ def extract_fitness(text):
     result = re.search(r'(\d+\.\d+)', fitness).group()
     return result
 
-def fitness(cache_blocking, n_items=100, n_threads=32, verbose=0):
+def getFitness(cache_blocking, n_items=100, n_threads=32, verbose=0):
     """
     :param int n_threads
     :param int n_items
@@ -44,4 +44,4 @@ if __name__ == "__main__":
     print("Deployment")
     args = cmdLineParsing()
     print(args)
-    fitness(*args)
+    getFitness(*args)
