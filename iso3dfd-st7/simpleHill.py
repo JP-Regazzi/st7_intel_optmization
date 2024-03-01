@@ -2,9 +2,9 @@ import random
 from launch import getFitness
 import argparse
 
-def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=0.01):
+def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=0.01, verbose=0):
     current_x, current_y, current_z = start_x, start_y, start_z
-    current_fitness = getFitness((current_x, current_y, current_z))
+    current_fitness = getFitness((current_x, current_y, current_z), verbose=verbose)
     
     for _ in range(steps):
         # Generate a list of neighboring points
@@ -21,7 +21,7 @@ def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=0.01):
         best_neighbor = None
         best_fitness = current_fitness
         for x, y, z in neighbors:
-            fitness = getFitness((x, y, z))
+            fitness = getFitness((x, y, z), verbose=verbose)
             if fitness > best_fitness:
                 best_neighbor = (x, y, z)
                 best_fitness = fitness
@@ -42,11 +42,15 @@ if __name__ == "__main__":
     parser.add_argument("--seed", help="seed", default=42, type=int)
     parser.add_argument("--steps", help="steps", default=100, type=int)
     parser.add_argument("--stepsize", help="stepsize", default=0.1, type=int)
+    parser.add_argument("--verbose", help="verbose", default=0, type=int)
     args = parser.parse_args()
     seed = args.seed
+    verbose = args.verbose
+    steps = args.steps
+    stepsize = args.stepsize
     # Random starting point in (0, 100)
     random.seed(seed)
     start_x, start_y, start_z = 32, random.randrange(1, 128), random.randrange(1, 128)
-    final_x, final_y, final_z, final_fitness = hill_climbing_3d(start_x, start_y, start_z)
+    final_x, final_y, final_z, final_fitness = hill_climbing_3d(start_x, start_y, start_z, verbose)
     print(f"Final position: ({final_x}, {final_y}, {final_z}) with fitness {final_fitness}")
 
