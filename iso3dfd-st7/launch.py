@@ -32,9 +32,10 @@ def deploySUBP(cache_blocking, n_items=100, n_threads=32, verbose=0):
 
 def cmdLineParsing():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--items", help="N_items", default=100, type=int)
     parser.add_argument("--cache", nargs="+", default=[32,32,32], type=int)
+    parser.add_argument("--items", help="N_items", default=100, type=int)
     parser.add_argument("--threads", default=32, type=int)
+    parser.add_argument("--verbose", default=0, type=int)
     args = parser.parse_args()
     n_items = args.items
     n_threads = args.threads
