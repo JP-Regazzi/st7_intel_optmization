@@ -40,7 +40,8 @@ def cmdLineParsing():
     n_items = args.items
     n_threads = args.threads
     cache_blocking = tuple(args.cache)
-    return (n_items, cache_blocking, n_threads)
+    verbose = args.verbose
+    return (cache_blocking, n_items, n_threads, verbose)
 
 def getFitness(c1, c2, c3):
     return deploySUBP((c1,c2,c3))
@@ -48,4 +49,5 @@ def getFitness(c1, c2, c3):
 if __name__ == "__main__":
     print("Deployment")
     args = cmdLineParsing()
+    print(args)
     deploySUBP(*args)
