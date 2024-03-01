@@ -41,7 +41,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", help="seed", default=42, type=int)
     parser.add_argument("--steps", help="steps", default=100, type=int)
-    parser.add_argument("--stepsize", help="stepsize", default=0.1, type=int)
+    parser.add_argument("--stepsize", help="stepsize", default=1, type=int)
     parser.add_argument("--verbose", help="verbose", default=0, type=int)
     args = parser.parse_args()
     seed = args.seed
