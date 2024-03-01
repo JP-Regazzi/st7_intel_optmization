@@ -4,7 +4,7 @@ import argparse
 
 def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=0.01):
     current_x, current_y, current_z = start_x, start_y, start_z
-    current_fitness = getFitness(current_x, current_y, current_z)
+    current_fitness = fitness(current_x, current_y, current_z)
     
     for _ in range(steps):
         # Generate a list of neighboring points
@@ -21,7 +21,7 @@ def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=0.01):
         best_neighbor = None
         best_fitness = current_fitness
         for x, y, z in neighbors:
-            fitness = getFitness(x, y, z)
+            fitness = fitness(x, y, z)
             if fitness > best_fitness:
                 best_neighbor = (x, y, z)
                 best_fitness = fitness
