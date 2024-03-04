@@ -1,3 +1,4 @@
+import math
 import os
 import subprocess
 import sys
@@ -6,22 +7,37 @@ from starter import extract_fitness, run_process
 import random
 
 def perturb_parameters(parameters, step_size):
-    # Perturb all parameters by a small step size, except the one you want to keep constant (index 4).
-    perturbed_parameters = [param + step_size if i != 4 else param for i, param in enumerate(parameters)]
+    # Randomly select an index to perturb
+    index_to_perturb = [i for i in range(len(parameters)) if i !=4]
+    index_to_perturb = random.choice(index_to_perturb)
+    print(index_to_perturb)
+
+    # Perturb the selected parameter by a small step size
+    if index_to_perturb != 0 and index_to_perturb != 5:
+        perturbed_parameters = [
+        param + step_size if i == index_to_perturb else param for i, param in enumerate(parameters)
+    ]
+    else:
+        perturbed_parameters = [
+        param + 16 if i == index_to_perturb else param for i, param in enumerate(parameters)
+    ]
     return perturbed_parameters
 
 def hill_climbing(initial_parameters, step_size, max_iterations, max_stable_runs):
     current_parameters = initial_parameters
-    current_gflops = run_process()
+    current_gflops = run_process(current_parameters)
     stable_runs = 0
+
 
     for iteration in range(max_iterations):
         # Perturb parameters
         neighbor_parameters = perturb_parameters(current_parameters, step_size)
-        neighbor_gflops = run_process()
+        print(neighbor_parameters)
+        neighbor_gflops = run_process(neighbor_parameters)
+
 
         if neighbor_gflops > current_gflops:
-            current_parameters = neighbor_parameters
+            current_parameters = neighbor_parameters    
             current_gflops = neighbor_gflops
             stable_runs = 0  # Reset stable runs if an improvement is found
         else:
@@ -34,9 +50,9 @@ def hill_climbing(initial_parameters, step_size, max_iterations, max_stable_runs
     return current_parameters, current_gflops
 
 if __name__ == '__main__':
-    initial_parameters = [128, 128, 128, 16, 100, 8, 8, 8]  # Adjust as needed
+    initial_parameters = [128, 128, 128, 16, 100, 16, 16, 16]  # Adjust as needed
     iterations = 50
-    step_size = 16  
+    step_size = 2
 
     best, gflops=  hill_climbing(initial_parameters,step_size, iterations, 10)
     print("the best paramerters are:", best, gflops)
