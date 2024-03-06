@@ -48,7 +48,7 @@ def generate_starting_points(num_starting_points, parameters_length):
 
     for _ in range(num_starting_points):
         starting_point = []
-        ran_block = random.randint(1, 11) * 16
+        ran_block = random.randint(7, 16) * 16
         for i in range(parameters_length):
             if i == 4:
                 # Fix the value at index 4 to 100
@@ -56,7 +56,7 @@ def generate_starting_points(num_starting_points, parameters_length):
             elif i == 0:
                 starting_point.append(ran_block)
             elif i == 5:
-                starting_point.append(random.randint(1, 2) * 16)    
+                starting_point.append(random.randint(1, 11) * 16)    
             elif i == 6 or i == 7 or i==3:
                 starting_point.append(random.randint(1, 16))
             else:
@@ -78,19 +78,18 @@ def run_multiple_starting_points_parallel(num_starting_points, parameters_length
             lambda start_point: hill_climbing(start_point, step_size, max_iterations, max_stable_runs),
             starting_points
         ))
-    for start_point, result in results:
-        print(f"Starting point: {start_point}, Result: {result}")
+    for start_point in starting_points:
+        print(f"Starting point: {start_point}")
     best_solution = max(results, key=lambda x: x[1])
-    print(f"Best solution: {best_solution[0]}, Result: {best_solution[1]}")
     # Return the best solution among all starting points
-    return best_solution[0]
+    return best_solution
 
 # Example usage
-num_starting_points = 8
+num_starting_points = 5
 parameters_length = 8
 max_iterations = 50
 max_stable_runs = 10
-step_size = 1   
+step_size = 4
 
 best_global_solution = run_multiple_starting_points_parallel(num_starting_points, parameters_length, max_iterations, max_stable_runs, step_size)
 print("Best Global Solution:", best_global_solution)
