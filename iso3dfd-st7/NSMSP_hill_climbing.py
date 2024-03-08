@@ -4,7 +4,7 @@ import concurrent.futures
 
 def perturb_parameters(parameters, step_size):
     # Randomly select an index to perturb
-    index_to_perturb = [i for i in range(len(parameters)) if i !=4]
+    index_to_perturb = [i for i in range(5, len(parameters)) if i !=4]
     index_to_perturb = random.choice(index_to_perturb)
     #print(index_to_perturb)
 
@@ -38,7 +38,7 @@ def hill_climbing(initial_parameters, step_size, max_iterations, max_stable_runs
             stable_runs += 1
 
         if stable_runs >= max_stable_runs:
-            # If performance hasn't improved for a certain number of runs, break the loop
+            # If performance hasn't improved for a certa in number of runs, break the loop
             break
 
     return current_parameters, current_gflops
@@ -48,7 +48,7 @@ def generate_starting_points(num_starting_points, parameters_length):
 
     for _ in range(num_starting_points):
         starting_point = []
-        ran_block = random.randint(7, 16) * 16
+        ran_block = 256
         for i in range(parameters_length):
             if i == 4:
                 # Fix the value at index 4 to 100
@@ -57,11 +57,12 @@ def generate_starting_points(num_starting_points, parameters_length):
                 starting_point.append(ran_block)
             elif i == 5:
                 starting_point.append(random.randint(1, 11) * 16)    
-            elif i == 6 or i == 7 or i==3:
+            elif i == 6 or i == 7:  
                 starting_point.append(random.randint(1, 16))
+            elif i == 3:
+                starting_point.append(32)
             else:
                 starting_point.append(ran_block)
-                    
 
         starting_points.append(starting_point)
 
