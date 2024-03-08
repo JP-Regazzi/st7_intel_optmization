@@ -19,32 +19,18 @@ def compile():
     os.system(INTEL_MODULE_LOAD)
     os.system(COMPILE_COMMAND)
 
-def run_process():
-
+def run_process(parameters):
     command = ['bin/iso3dfd_dev13_cpu_avx2.exe']
-    command.extend(parse_arguments())
-
+    
+    # Extend the command with the provided parameters
+    command.extend(map(str, parameters))
     result = subprocess.run(command, stdout=subprocess.PIPE, text=True)
     result = result.stdout 
     gflops = float(extract_fitness(result)[:5])
 
     print(f"GFlops: {gflops}")
     return gflops
-
-def run_process_parametrized(i, j, k):
-
-    command = ['bin/iso3dfd_dev13_cpu_avx2.exe']
-    parameters = ["256", "256", "256", "32", "100", f"{i}", f"{j}", f"{k}"]
-    command.extend(parameters)
-
-    result = subprocess.run(command, stdout=subprocess.PIPE, text=True)
-    result = result.stdout 
-    gflops = float(extract_fitness(result)[:5])
-
-    print(f"GFlops: {gflops}")
-    return gflops
-
-
+    
 if __name__ == '__main__':
 
     compile()
