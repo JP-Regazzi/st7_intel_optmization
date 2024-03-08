@@ -37,17 +37,17 @@ def parallel_grid_search(comm, grid_values_i, grid_values_j, grid_values_k):
 
     # Rank 0 prints the global best points
     if rank == 0:
-        global_best_index = np.argmin(current_maximum_global)
+        global_best_index = np.argmax(current_maximum_global)
         print("Best Points (Global):", best_points_global[global_best_index])
-        print("Current Minimum (Global):", current_maximum_global[global_best_index])
+        print("Current Maximum (Global):", current_maximum_global[global_best_index])
 
 
 if __name__ == "__main__":
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
 
-    grid_values_i = range(16, 256, 16)
-    grid_values_j = range(16, 256, 16)
-    grid_values_k = range(16, 256, 16)
+    grid_values_i = range(32, 256, 32)
+    grid_values_j = range(32, 256, 32)
+    grid_values_k = range(32, 256, 32)
 
     parallel_grid_search(comm, grid_values_i, grid_values_j, grid_values_k)
