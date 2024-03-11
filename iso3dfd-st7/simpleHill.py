@@ -1,9 +1,18 @@
 import random
 from launch import getFitness
 import argparse
+import time
 
-def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=0.01, verbose=0):
-    current_x, current_y, current_z = start_x, start_y, start_z
+LOCAL_DEBUG = True
+
+def getFitnessDebug(cache_blocking, verbose = 0):
+    x, y, z = cache_blocking
+    val = x**2 + y**2 + z**2
+    if verbose > 0: print(f"Fitness: {val}")
+    return val
+
+def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=1, verbose=0):
+    current_x, current_y, current_z = start_x*16, start_y, start_z
     current_fitness = getFitness((current_x, current_y, current_z), verbose=verbose)
     
     for _ in range(steps):
@@ -14,7 +23,7 @@ def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=0.01, verb
                 for dz in [-step_size, 0, step_size]:
                     if dx == 0 and dy == 0 and dz == 0:
                         continue  # Skip the current point itself
-                    new_x, new_y, new_z = current_x, current_y + dy, current_z + dz # x stays constant
+                    new_x, new_y, new_z = current_x + 16*dx, current_y + dy, current_z + dz # x stays constant
                     neighbors.append((new_x, new_y, new_z))
         
         # Evaluate all neighbors and move to the best one
@@ -40,17 +49,25 @@ if __name__ == "__main__":
     # Get seed by --seed argument
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", help="seed", default=42, type=int)
-    parser.add_argument("--steps", help="steps", default=100, type=int)
+    parser.add_argument("--steps", help="steps", default=1000, type=int)
     parser.add_argument("--stepsize", help="stepsize", default=1, type=int)
     parser.add_argument("--verbose", help="verbose", default=0, type=int)
+    parser.add_argument("--timer", help="timer", default=False, type=bool)
     args = parser.parse_args()
     seed = args.seed
     verbose = args.verbose
     steps = args.steps
     stepsize = args.stepsize
-    # Random starting point in (0, 100)
+    timer = args.timer
+    if timer:
+        start = time.time()
     random.seed(seed)
-    start_x, start_y, start_z = 32, random.randrange(1, 128), random.randrange(1, 128)
-    final_x, final_y, final_z, final_fitness = hill_climbing_3d(start_x, start_y, start_z, verbose)
+    if LOCAL_DEBUG:
+        getFitness = getFitnessDebug
+    start_x, start_y, start_z = random.randrange(1, 11), random.randrange(1, 128), random.randrange(1, 128)
+    final_x, final_y, final_z, final_fitness = hill_climbing_3d(start_x, start_y, start_z, steps, stepsize, verbose)
     print(f"Final position: ({final_x}, {final_y}, {final_z}) with fitness {final_fitness}")
+    if timer:
+        end = time.time()
+        print(f"Time elapsed: {end-start}")
 
