@@ -34,6 +34,7 @@ def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=1, verbose
         best_fitness = current_fitness
         for x, y, z in neighbors:
             fitness = getFitness((x, y, z), verbose=verbose)
+            explored_values.append((y, z, fitness))  # Save each fitness call
             if fitness > best_fitness:
                 best_neighbor = (x, y, z)
                 best_fitness = fitness
@@ -42,9 +43,6 @@ def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=1, verbose
         if best_neighbor:
             current_x, current_y, current_z = best_neighbor
             current_fitness = best_fitness
-            
-            # Store the explored values
-            explored_values.append((current_y, current_z, current_fitness))
         else:
             # No better neighbors, so we've reached a peak
             break
@@ -55,7 +53,7 @@ if __name__ == "__main__":
     # Get seed by --seed argument
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", help="seed", default=42, type=int)
-    parser.add_argument("--steps", help="steps", default=1, type=int)
+    parser.add_argument("--steps", help="steps", default=1000, type=int)
     parser.add_argument("--stepsize", help="stepsize", default=1, type=int)
     parser.add_argument("--verbose", help="verbose", default=0, type=int)
     parser.add_argument("--timer", help="timer", default=False, type=bool)
