@@ -3,7 +3,7 @@ from launch import getFitness
 import argparse
 import time
 
-LOCAL_DEBUG = False
+LOCAL_DEBUG = True
 
 def getFitnessDebug(cache_blocking, verbose = 0):
     x, y, z = cache_blocking
@@ -15,8 +15,9 @@ def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=1, verbose
     current_x, current_y, current_z = start_x*16, start_y, start_z
     current_fitness = getFitness((current_x, current_y, current_z), verbose=verbose)
     
-    # Initialize arrays to store the explored values
-    explored_values = [(current_y, current_z, current_fitness)]
+    # Open the file in append mode
+    with open('explored_values.txt', 'a') as file:
+        file.write(f"{current_y},{current_z},{current_fitness}\n")
     
     for _ in range(steps):
         # Generate a list of neighboring points
@@ -34,7 +35,9 @@ def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=1, verbose
         best_fitness = current_fitness
         for x, y, z in neighbors:
             fitness = getFitness((x, y, z), verbose=verbose)
-            explored_values.append((y, z, fitness))  # Save each fitness call
+            # Write each fitness call to the file
+            with open('explored_values.txt', 'a') as file:
+                file.write(f"{y},{z},{fitness}\n")
             if fitness > best_fitness:
                 best_neighbor = (x, y, z)
                 best_fitness = fitness
@@ -47,7 +50,7 @@ def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=1, verbose
             # No better neighbors, so we've reached a peak
             break
     
-    return current_x, current_y, current_z, current_fitness, explored_values
+    return current_x, current_y, current_z, current_fitness
 
 if __name__ == "__main__":
     # Get seed by --seed argument
@@ -69,14 +72,13 @@ if __name__ == "__main__":
     if LOCAL_DEBUG:
         getFitness = getFitnessDebug
     start_x, start_y, start_z = random.randrange(1, 11), random.randrange(1, 128), random.randrange(1, 128)
-    final_x, final_y, final_z, final_fitness, explored_values = hill_climbing_3d(start_x, start_y, start_z, steps, stepsize, verbose)
+    
+    # Write the header to the file
+    with open('explored_values.txt', 'w') as file:
+        file.write("Y,Z,Fitness\n")
+    
+    final_x, final_y, final_z, final_fitness = hill_climbing_3d(start_x, start_y, start_z, steps, stepsize, verbose)
     print(f"Final position: ({final_x}, {final_y}, {final_z}) with fitness {final_fitness}")
     if timer:
         end = time.time()
         print(f"Time elapsed: {end-start}")
-    
-    # Save the explored values in a text file
-    with open('explored_values.txt', 'w') as file:
-        file.write("Y,Z,Fitness\n")
-        for y, z, fitness in explored_values:
-            file.write(f"{y},{z},{fitness}\n")
