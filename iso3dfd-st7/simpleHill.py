@@ -2,6 +2,8 @@ import random
 from launch import getFitness
 import argparse
 import time
+import numpy as np
+import matplotlib.pyplot as plt
 
 LOCAL_DEBUG = True
 
@@ -14,6 +16,11 @@ def getFitnessDebug(cache_blocking, verbose = 0):
 def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=1, verbose=0):
     current_x, current_y, current_z = start_x*16, start_y, start_z
     current_fitness = getFitness((current_x, current_y, current_z), verbose=verbose)
+    
+    # Initialize arrays to store the explored values
+    y_values = [current_y]
+    z_values = [current_z]
+    fitness_values = [current_fitness]
     
     for _ in range(steps):
         # Generate a list of neighboring points
@@ -39,11 +46,16 @@ def hill_climbing_3d(start_x, start_y, start_z, steps=1000, step_size=1, verbose
         if best_neighbor:
             current_x, current_y, current_z = best_neighbor
             current_fitness = best_fitness
+            
+            # Store the explored values
+            y_values.append(current_y)
+            z_values.append(current_z)
+            fitness_values.append(current_fitness)
         else:
             # No better neighbors, so we've reached a peak
             break
     
-    return current_x, current_y, current_z, current_fitness
+    return current_x, current_y, current_z, current_fitness, y_values, z_values, fitness_values
 
 if __name__ == "__main__":
     # Get seed by --seed argument
@@ -65,9 +77,21 @@ if __name__ == "__main__":
     if LOCAL_DEBUG:
         getFitness = getFitnessDebug
     start_x, start_y, start_z = random.randrange(1, 11), random.randrange(1, 128), random.randrange(1, 128)
-    final_x, final_y, final_z, final_fitness = hill_climbing_3d(start_x, start_y, start_z, steps, stepsize, verbose)
+    final_x, final_y, final_z, final_fitness, y_values, z_values, fitness_values = hill_climbing_3d(start_x, start_y, start_z, steps, stepsize, verbose)
     print(f"Final position: ({final_x}, {final_y}, {final_z}) with fitness {final_fitness}")
     if timer:
         end = time.time()
         print(f"Time elapsed: {end-start}")
-
+    
+    # Create a heatmap of the explored values
+    y_values = np.array(y_values)
+    z_values = np.array(z_values)
+    fitness_values = np.array(fitness_values)
+    
+    plt.figure(figsize=(8, 6))
+    plt.hist2d(y_values, z_values, bins=20, weights=fitness_values, cmap='viridis')
+    plt.colorbar(label='GFlops')
+    plt.xlabel('Y')
+    plt.ylabel('Z')
+    plt.title('Heatmap of Explored Values')
+    plt.show()
