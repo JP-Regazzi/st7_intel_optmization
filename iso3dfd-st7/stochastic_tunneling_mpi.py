@@ -1,7 +1,7 @@
 import random
 import math
 from starter import run_process_parametrized, run_process
-
+from mpi4py import MPI
 
 def generate_starting_points(num_starting_points):
     starting_points = []
@@ -101,20 +101,25 @@ def stochastic_tunneling(initial_parameters, step_size, temperature_initial, max
     return Sbest, Ebest
 
 
-def main(num_starting_points, max_stable_runs, step_size):
+def main(num_starting_points, step_size, temperature_initial, max_iteration, max_k):
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()
-
+    print("rank", rank)
+    print("size", size)
     # Split the starting points among processes
     starting_points = generate_starting_points(num_starting_points)
+    print("starting points:", starting_points)
     chunk_size = len(starting_points) // size
+    print('chunk size', chunk_size)
     starting_points_chunk = starting_points[rank * chunk_size: (rank + 1) * chunk_size]
+    print("starting points chunk:", starting_points_chunk)
 
-    # Run hill climbing for the assigned starting points
+    # Run stochastic_tunneling_mpi for the assigned starting points
     local_results = []
     for start_point in starting_points_chunk:
-        local_results.append(stochastic_tunneling(start_point, step_size, max_stable_runs))
+        print('Estou no loop')
+        local_results.append(stochastic_tunneling(start_point, step_size, temperature_initial, max_iteration, max_k))
 
     # Gather results from all processes
     all_results = comm.gather(local_results, root=0)
@@ -122,6 +127,14 @@ def main(num_starting_points, max_stable_runs, step_size):
     if rank == 0:
         # Flatten the gathered results
         flattened_results = [result for sublist in all_results for result in sublist]
+
+        print("Flattened results:", flattened_results)  # Print the flattened results
+        if not flattened_results:
+            print("No results found!")  # Print a message if flattened_results is empty
+        else:
+            best_solution = max(flattened_results, key=lambda x: x[1])
+            print("Best Global Solution:", best_solution[0], best_solution[1])
+            return best_solution
         best_solution = max(flattened_results, key=lambda x: x[1])
         print("Best Global Solution:", best_solution[0], best_solution[1])
         return best_solution
@@ -130,14 +143,10 @@ def main(num_starting_points, max_stable_runs, step_size):
 
 
 if __name__ == '__main__':
-    num_starters = 1
+    num_starters = 3
     step_size = 4
     temperature_initial = 1000
     max_iteration = 10
     max_k = 5
-    starting_points = generate_starting_points(num_starters)
-    for point in starting_points:
-        print('points: ', point)
-        best_paramenter, best_gflops = stochastic_tunneling(point, step_size, temperature_initial, max_iteration, max_k)
 
-    print("best solution is:", best_paramenter, best_gflops)
+    main(num_starters, step_size, temperature_initial, max_iteration, max_k)
