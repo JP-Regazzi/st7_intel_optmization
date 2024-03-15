@@ -50,12 +50,13 @@ def generate_starting_points(num_starting_points):
     return starting_points
 
 
-def main(num_starting_points, max_stable_runs, step_size):
+def main(max_stable_runs, step_size):
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()
 
     # Split the starting points among processes
+    num_starting_points = size
     starting_points = generate_starting_points(num_starting_points)
     chunk_size = len(starting_points) // size
     starting_points_chunk = starting_points[rank * chunk_size: (rank + 1) * chunk_size]
@@ -83,8 +84,7 @@ def main(num_starting_points, max_stable_runs, step_size):
 
 
 # Parameters
-num_starting_points = 8
 max_stable_runs = 20
 step_size = 4
 
-main(num_starting_points, max_stable_runs, step_size)
+main(max_stable_runs, step_size)
