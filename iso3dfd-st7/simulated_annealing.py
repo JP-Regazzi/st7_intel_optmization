@@ -54,7 +54,6 @@ def simulated_annealing(initial_parameters,step_size, temperature_initial, max_i
 
     
     for i in range(max_iteration):
-        print(i)
         neigh_parameter = update_parameters(current_parameters, step_size)
         print(neigh_parameter)
         neigh_gflops = run_process(neigh_parameter)
@@ -65,14 +64,51 @@ def simulated_annealing(initial_parameters,step_size, temperature_initial, max_i
    
     return current_parameters, current_gflops
 
+def modify_sbest(sbest, factor):
+    modified_sbest = sbest
+    for i in range(5, len(sbest)):
+        if i == 5:
+            modified_sbest[i] = modified_sbest[i] - 16 
+        else:
+            modified_sbest[i] = int(modified_sbest[i] * factor)
+
+    print("Disturbed: ", modified_sbest)
+    return modified_sbest
+
+def stochastic_tunneling(initial_parameters, step_size, temperature_initial, max_iteration, max_k):
+    current_parameters = initial_parameters
+    current_gflops = run_process(current_parameters)
+    
+    Sbest = current_parameters
+    Ebest = current_gflops
+    k = 0
+    foundBetter = True
+    
+    while k < max_k and foundBetter:
+        print("modificacao: ", k)
+        Sprime, Eprime = simulated_annealing(Sbest, step_size, temperature_initial, max_iteration)
+        print("Sprime, Eprime", Sprime, Eprime)
+        if Eprime > Ebest:
+            Sbest = Sprime
+            Ebest = Eprime
+            Sbest = modify_sbest(Sbest, 0.80)
+            k += 1
+        else:
+            Sbest = Sprime
+            Ebest = Eprime
+            foundBetter = False
+    
+    return Sbest, Ebest
+
 if __name__ == '__main__':
     num_starters = 1
     step_size = 4
     temperature_initial = 1000
-    max_iteration = 50
+    max_iteration = 10
+    max_k = 5
     starting_points = generate_starting_points(num_starters)
     for point in starting_points:
         print('points: ', point)
-        best_paramenter, best_gflops = simulated_annealing(point, step_size, temperature_initial, max_iteration)
+        best_paramenter, best_gflops = stochastic_tunneling(point, step_size, temperature_initial, max_iteration, max_k)
 
     print("best solution is:", best_paramenter, best_gflops)
