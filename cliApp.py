@@ -73,19 +73,20 @@ def get_arguments(args):
     return selected_arguments
 
 def display_results(output, error, output_filename):
+    output_filename = output_filename.replace(" ", "")
     print(BOLD + "Output:" + RESET)
     if not error:
         print(GREEN + "Monitoring output file (press Ctrl+C to stop):" + RESET)
-        last_line = ""
+        last_line_count = 0
         try:
             while True:
                 try:
                     with open(output_filename, 'r') as file:
                         lines = file.readlines()
-                        for line in lines:
-                            if line != last_line:
-                                print(line, end='')
-                                last_line = line
+                        if len(lines) > last_line_count:
+                            new_lines = lines[last_line_count:]
+                            print(''.join(new_lines), end='')
+                            last_line_count = len(lines)
                 except FileNotFoundError:
                     print(YELLOW + f"Waiting for {output_filename} to be created..." + RESET)
                 time.sleep(1)  # Wait for 1 second before reading the file again
