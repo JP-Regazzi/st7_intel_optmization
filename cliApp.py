@@ -56,6 +56,13 @@ def display_menu():
     choice = input("Enter the number of the script to run: ")
     return choice
 
+def get_sbatch_parameters():
+    nodes = input(f"Enter the number of nodes (default: 1): ") or "1"
+    tasks_per_node = input(f"Enter the number of tasks per node (default: 32): ") or "32"
+    partition = input(f"Enter the partition (default: cpu_prod): ") or "cpu_prod"
+    qos = input(f"Enter the QOS (default: 8nodespu): ") or "8nodespu"
+    return nodes, tasks_per_node, partition, qos
+
 def get_arguments(args):
     selected_arguments = []
     for arg in args:
@@ -70,11 +77,14 @@ def display_results(output, error, output_filename):
     if not error:
         print(GREEN + "Monitoring output file (press Ctrl+C to stop):" + RESET)
         try:
-            with open(output_filename, 'r') as file:
-                while True:
-                    lines = file.readlines()[-10:]  # Read last 10 lines of the file
-                    print('\n'.join(lines))
-                    time.sleep(1)  # Wait for 1 second before reading the file again
+            while True:
+                try:
+                    with open(output_filename, 'r') as file:
+                        lines = file.readlines()[-10:]  # Read last 10 lines of the file
+                        print('\n'.join(lines))
+                except FileNotFoundError:
+                    print(YELLOW + f"Waiting for {output_filename} to be created..." + RESET)
+                time.sleep(1)  # Wait for 1 second before reading the file again
         except KeyboardInterrupt:
             print(BOLD + YELLOW + "\nStopped monitoring file." + RESET)
         except Exception as e:
@@ -97,20 +107,17 @@ while True:
         script_args = script_info['args']
         print(f"\n{BOLD}{YELLOW}Running {script_name}...{RESET}")
         selected_arguments = get_arguments(script_args)
-        # Correctly form the path to the script
+        nodes, tasks_per_node, partition, qos = get_sbatch_parameters()
         script_path = os.path.join(SCRIPT_DIR, script_filename)
 
-        # Form the command as a list of its parts
-        command = ['sbatch', '-N', '1', '-n', '32', '-p', 'cpu_prod', '--qos=8nodespu', 
-                f'--output={script_name.replace(" ", "")}.txt', script_path] + selected_arguments
+        command = ['sbatch', '-N', nodes, '-n', tasks_per_node, '-p', partition, f'--qos={qos}',
+                   f'--output={script_name.replace(" ", "")}.txt', script_path] + selected_arguments
 
-        # Execute the command
         try:
             result = subprocess.run(command, capture_output=True, text=True, shell=False)
             display_results(result.stdout, result.stderr, f"{script_name.replace(' ', '')}.txt")
         except Exception as e:
             print(f"An error occurred while trying to execute the script: {e}")
-        #results are in a .txt file named script_name.txt. loop to read the file and print the results
         display_results(result.stdout, result.stderr, f"{script_name}.txt")
     else:
         print(BOLD + RED + "Invalid choice. Please try again." + RESET)
