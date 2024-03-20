@@ -77,12 +77,16 @@ def display_results(output, error, output_filename):
     print(BOLD + "Output:" + RESET)
     if not error:
         print(GREEN + "Monitoring output file (press Ctrl+C to stop):" + RESET)
+        last_line = ""
         try:
             while True:
                 try:
                     with open(output_filename, 'r') as file:
-                        lines = file.readlines()[-1]  # Read last line of the file
-                        print('\n'.join(lines))
+                        lines = file.readlines()
+                        for line in lines:
+                            if line != last_line:
+                                print(line, end='')
+                                last_line = line
                 except FileNotFoundError:
                     print(YELLOW + f"Waiting for {output_filename} to be created..." + RESET)
                 time.sleep(1)  # Wait for 1 second before reading the file again
