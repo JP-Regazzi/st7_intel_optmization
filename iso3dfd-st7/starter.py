@@ -30,14 +30,11 @@ def run_process(parameters):
 
     print(f"GFlops: {gflops}")
     return gflops
-<<<<<<< Updated upstream
-    
-=======
 
-def run_process_parametrized(i, j, k):
+def run_process_parametrized(cache_parameters):
 
     command = ['bin/iso3dfd_dev13_cpu_avx2.exe']
-    parameters = ["256", "256", "256", "32", "100", f"{i}", f"{j}", f"{k}"]
+    parameters = ["256", "256", "256", "32", "100", f"{cache_parameters[0]}", f"{cache_parameters[1]}", f"{cache_parameters[2]}"]
     command.extend(parameters)
 
     result = subprocess.run(command, stdout=subprocess.PIPE, text=True)
@@ -45,10 +42,9 @@ def run_process_parametrized(i, j, k):
 
     gflops = float(extract_fitness(result)[:5])
 
-    print(f"Parameters: {i, j, k} GFlops: {gflops}")
+    print(f"Parameters: {parameters} GFlops: {gflops}")
     return gflops
 
->>>>>>> Stashed changes
 if __name__ == '__main__':
 
     compile()
