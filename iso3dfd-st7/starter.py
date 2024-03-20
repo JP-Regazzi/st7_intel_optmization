@@ -30,9 +30,6 @@ def run_process(parameters):
 
     print(f"GFlops: {gflops}")
     return gflops
-<<<<<<< Updated upstream
-    
-=======
 
 def run_process_parametrized(i, j, k):
 
@@ -48,7 +45,6 @@ def run_process_parametrized(i, j, k):
     print(f"Parameters: {i, j, k} GFlops: {gflops}")
     return gflops
 
->>>>>>> Stashed changes
 if __name__ == '__main__':
 
     compile()
