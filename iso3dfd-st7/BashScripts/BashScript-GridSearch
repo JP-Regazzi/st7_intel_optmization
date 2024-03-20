@@ -8,10 +8,15 @@ source /etc/profile
 module load py-mpi4py/3.1.4/gcc-12.3.0-openmpi
 
 # Move do tmp dir
- cd /usr/users/st76i/st76i_12/iso3dfd-st7/
+ cd ..
+
+# parse range_start, range_end and range_step arguments
+range_start=$1
+range_end=$2
+range_step=$3
 
 # Execute code
 echo "=============================="
 echo "Grid search on 4 nodes - no threads"
-/usr/bin/mpirun -np 4 -map-by ppr:1:socket:PE=8 -rank-by core python3 grid_search.py
+/usr/bin/mpirun -np 4 -map-by ppr:1:socket:PE=8 -rank-by core python3 grid_search.py --start $range_start --end $range_end --step $range_step
 echo "============================="
