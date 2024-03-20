@@ -10,7 +10,7 @@ BOLD = "\033[1m"
 RESET = "\033[0m"
 WIDTH = 80  # Width of the menu
 
-SCRIPT_DIR = "iso3dfd-st7/BashScripts/"
+SCRIPT_DIR = "iso3dfd-st7/BashScripts"
 
 scripts = {
     "Stochastic Tunneling": {"filename": "foo1.py", "args": ["--bar1", "--bar2"]},
@@ -97,9 +97,19 @@ while True:
         script_args = script_info['args']
         print(f"\n{BOLD}{YELLOW}Running {script_name}...{RESET}")
         selected_arguments = get_arguments(script_args)
-        command = [f'sbatch -N 1 -n 32 -p cpu_prod --qos=8nodespu --output={script_name.replace(" ", "")}.txt {SCRIPT_DIR+script_filename}'] + selected_arguments
-        #command = ["python3", script_filename] + selected_arguments
-        result = subprocess.run(command, capture_output=True, text=True)
+        # Correctly form the path to the script
+        script_path = os.path.join(SCRIPT_DIR, script_filename)
+
+        # Form the command as a list of its parts
+        command = ['sbatch', '-N', '1', '-n', '32', '-p', 'cpu_prod', '--qos=8nodespu', 
+                f'--output={script_name.replace(" ", "")}.txt', script_path] + selected_arguments
+
+        # Execute the command
+        try:
+            result = subprocess.run(command, capture_output=True, text=True, shell=False)
+            display_results(result.stdout, result.stderr, f"{script_name.replace(' ', '')}.txt")
+        except Exception as e:
+            print(f"An error occurred while trying to execute the script: {e}")
         #results are in a .txt file named script_name.txt. loop to read the file and print the results
         display_results(result.stdout, result.stderr, f"{script_name}.txt")
     else:
