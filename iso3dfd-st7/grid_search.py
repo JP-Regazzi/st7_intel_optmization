@@ -23,7 +23,7 @@ def parallel_grid_search(comm, grid_values_i, grid_values_j, grid_values_k):
                 if temp_result > current_maximum_local:
                     current_maximum_local = temp_result
                     best_points_local = (i, j, k)
-        print(f"Current Maximum  ---  GFlops: {current_maximum_local}, Cache parameters: {best_points_local}")
+        print(f"Current Maximum  ---  Cache parameters: {best_points_local}, GFlops: {current_maximum_local}")
 
     # Gather the best points from all processes to rank 0
     best_points_global = comm.gather(best_points_local, root=0)

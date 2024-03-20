@@ -86,16 +86,16 @@ def stochastic_tunneling(initial_parameters, step_size, temperature_initial, max
     foundBetter = True
     
     while k < max_k and foundBetter:
-        print("update: ", k)
+        print("Update: ", k)
         Sprime, Eprime, temp_runs = simulated_annealing(Sbest, step_size, temperature_initial, max_iteration)
         number_of_runs += temp_runs
 
-        print("Sprime, Eprime", Sprime, Eprime)
         if Eprime > Ebest:
             Sbest = Sprime
             Ebest = Eprime
             Sbest = modify_sbest(Sbest, 0.8)
             k += 1
+            print(f"Current Maximum --- Parameters: {Sprime}, GFlops: {Eprime}")
         else:
             Sbest = Ssave
             Ebest = Esave
@@ -112,17 +112,13 @@ def main(step_size, temperature_initial, max_iteration, max_k):
     rank = comm.Get_rank()
     size = comm.Get_size()
     num_starting_points = size
-    print("rank", rank) 
-    print("size", size)
+
     # Split the starting points among processes
     starting_points = generate_starting_points(num_starting_points)
-    print("starting points:", starting_points)
     chunk_size = num_starting_points // size
-    print('chunk size', chunk_size)
     if chunk_size == 0:
         chunk_size = 1
     starting_points_chunk = starting_points[rank * chunk_size: (rank + 1) * chunk_size]
-    print("starting points chunk:", starting_points_chunk)
 
     # Run stochastic_tunneling_mpi for the assigned starting points
     local_results, number_of_local_runs = [], 0
@@ -148,8 +144,6 @@ def main(step_size, temperature_initial, max_iteration, max_k):
             print("Total number runs:", total_number_of_runs)
             return best_solution
         best_solution = max(flattened_results, key=lambda x: x[1])
-        print("Best Global Solution:", best_solution[0], best_solution[1])
-        print("Total number runs:", total_number_of_runs)
 
         return best_solution
 
