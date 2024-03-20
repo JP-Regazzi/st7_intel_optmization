@@ -78,6 +78,7 @@ def display_results(output, error, output_filename):
     if not error:
         print(GREEN + "Monitoring output file (press Ctrl+C to stop):" + RESET)
         last_line_count = 0
+        waiting_message_printed = False
         try:
             while True:
                 try:
@@ -88,7 +89,9 @@ def display_results(output, error, output_filename):
                             print(''.join(new_lines), end='')
                             last_line_count = len(lines)
                 except FileNotFoundError:
-                    print(YELLOW + f"Waiting for {output_filename} to be created..." + RESET)
+                    if not waiting_message_printed:
+                        print(YELLOW + f"Waiting for {output_filename} to be created..." + RESET)
+                        waiting_message_printed = True
                 time.sleep(1)  # Wait for 1 second before reading the file again
         except KeyboardInterrupt:
             print(BOLD + YELLOW + "\nStopped monitoring file." + RESET)
