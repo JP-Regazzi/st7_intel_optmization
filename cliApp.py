@@ -81,7 +81,7 @@ def display_results(output, error, output_filename):
             while True:
                 try:
                     with open(output_filename, 'r') as file:
-                        lines = file.readlines()[-10:]  # Read last 10 lines of the file
+                        lines = file.readlines()[-1]  # Read last line of the file
                         print('\n'.join(lines))
                 except FileNotFoundError:
                     print(YELLOW + f"Waiting for {output_filename} to be created..." + RESET)
@@ -123,6 +123,5 @@ while True:
             display_results(result.stdout, result.stderr, f"{script_name.replace(' ', '')}.txt")
         except Exception as e:
             print(f"An error occurred while trying to execute the script: {e}")
-        display_results(result.stdout, result.stderr, f"{script_name}.txt")
     else:
         print(BOLD + RED + "Invalid choice. Please try again." + RESET)
