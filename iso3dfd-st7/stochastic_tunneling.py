@@ -1,7 +1,8 @@
 import random
 import math
-from starter import run_process_parametrized, run_process
+from starter import run_process
 from mpi4py import MPI
+
 
 def generate_starting_points(num_starting_points):
     starting_points = []
@@ -27,61 +28,40 @@ def generate_starting_points(num_starting_points):
         starting_points.append(starting_point)
 
     return starting_points
-""" 
-def update_parameters(parameters, step_size):
-    # Randomly select an index to perturb
-    index_to_perturb = [i for i in range(5, len(parameters)) if i !=4]
-    index_to_perturb = random.choice(index_to_perturb)
-    #print(index_to_perturb)
 
-    # Perturb the selected parameter by a small step size
-    if index_to_perturb != 0 and index_to_perturb != 5:
-        perturbed_parameters = [
-        param + step_size if i == index_to_perturb else param for i, param in enumerate(parameters)
-    ]
-    else:
-        perturbed_parameters = [
-        param + 16 if i == index_to_perturb else param for i, param in enumerate(parameters)
-    ]
-    return perturbed_parameters
- """
+
 def update_parameters(parameters, step_size):
     neigh_paramaters = []
     
     for i in range(3):
-        #print('i::', i)
         parameters_aux = parameters.copy()
         if i == 0:
             parameters_aux[i+5] = parameters_aux[i+5] + 16
         else:
             parameters_aux[i+5] = parameters_aux[i+5] + step_size
-        #print(parameters_aux)
         neigh_paramaters.append(parameters_aux)
-    #print("neigh: ", neigh_paramaters)
     return neigh_paramaters
-
 
 
 def simulated_annealing(initial_parameters,step_size, temperature_initial, max_iteration):
     current_parameters = initial_parameters
-    current_gflops = run_process(current_parameters)
-    
     temp = temperature_initial
-
+    number_of_runs = 1
+    current_gflops = run_process(current_parameters)
     
     for i in range(max_iteration):
         neigh_parameter = update_parameters(current_parameters, step_size)
         for neigh in neigh_parameter:
-
-            print(neigh)
             neigh_gflops = run_process(neigh)
+            number_of_runs += 1
             if neigh_gflops > current_gflops:
                 current_parameters = neigh
                 current_gflops = neigh_gflops
                 break
         temp *= 0.95
    
-    return current_parameters, current_gflops
+    return current_parameters, current_gflops, number_of_runs
+
 
 def modify_sbest(sbest, factor):
     modified_sbest = sbest
@@ -94,19 +74,22 @@ def modify_sbest(sbest, factor):
     print("Disturbed: ", modified_sbest)
     return modified_sbest
 
+
 def stochastic_tunneling(initial_parameters, step_size, temperature_initial, max_iteration, max_k):
     current_parameters = initial_parameters
+    number_of_runs = 1
     current_gflops = run_process(current_parameters)
-    
+
     Sbest = current_parameters
     Ebest = current_gflops
     k = 0
     foundBetter = True
     
     while k < max_k and foundBetter:
-        print("modificacao: ", k)
-        Sprime, Eprime = simulated_annealing(Sbest, step_size, temperature_initial, max_iteration)
-        
+        print("update: ", k)
+        Sprime, Eprime, temp_runs = simulated_annealing(Sbest, step_size, temperature_initial, max_iteration)
+        number_of_runs += temp_runs
+
         print("Sprime, Eprime", Sprime, Eprime)
         if Eprime > Ebest:
             Sbest = Sprime
@@ -121,13 +104,15 @@ def stochastic_tunneling(initial_parameters, step_size, temperature_initial, max
         Ssave = Sprime
         Esave = Eprime
     
-    return Sbest, Ebest
+    return Sbest, Ebest, number_of_runs
 
-def main(num_starting_points, step_size, temperature_initial, max_iteration, max_k):
+
+def main(step_size, temperature_initial, max_iteration, max_k):
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()
-    print("rank", rank)
+    num_starting_points = size
+    print("rank", rank) 
     print("size", size)
     # Split the starting points among processes
     starting_points = generate_starting_points(num_starting_points)
@@ -135,18 +120,20 @@ def main(num_starting_points, step_size, temperature_initial, max_iteration, max
     chunk_size = num_starting_points // size
     print('chunk size', chunk_size)
     if chunk_size == 0:
-        chunk_size = 1;
+        chunk_size = 1
     starting_points_chunk = starting_points[rank * chunk_size: (rank + 1) * chunk_size]
     print("starting points chunk:", starting_points_chunk)
 
     # Run stochastic_tunneling_mpi for the assigned starting points
-    local_results = []
+    local_results, number_of_local_runs = [], 0
     for start_point in starting_points_chunk:
-        print('Estou no loop')
-        local_results.append(stochastic_tunneling(start_point, step_size, temperature_initial, max_iteration, max_k))
+        Sbest, Ebest, number_of_runs = stochastic_tunneling(start_point, step_size, temperature_initial, max_iteration, max_k)
+        local_results.append((Sbest, Ebest))
+        number_of_local_runs += number_of_runs
 
     # Gather results from all processes
     all_results = comm.gather(local_results, root=0)
+    total_number_of_runs = comm.reduce(number_of_local_runs, op=MPI.SUM, root=0)
 
     if rank == 0:
         # Flatten the gathered results
@@ -158,21 +145,22 @@ def main(num_starting_points, step_size, temperature_initial, max_iteration, max
         else:
             best_solution = max(flattened_results, key=lambda x: x[1])
             print("Best Global Solution:", best_solution[0], best_solution[1])
+            print("Total number runs:", total_number_of_runs)
             return best_solution
         best_solution = max(flattened_results, key=lambda x: x[1])
         print("Best Global Solution:", best_solution[0], best_solution[1])
+        print("Total number runs:", total_number_of_runs)
+
         return best_solution
 
     return None
 
 
-if __name__ == '__main__':
-    num_starters = 3    
-    step_size = 2
-    temperature_initial = 1000
-    max_iteration = 50
-    max_k = 5
-    max_stable_runs = 25
-    
 
-    main(num_starters, step_size, temperature_initial, max_iteration, max_k)
+step_size = 2
+temperature_initial = 1000
+max_iteration = 50
+max_k = 5
+
+
+main(step_size, temperature_initial, max_iteration, max_k)
