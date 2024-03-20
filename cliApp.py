@@ -13,7 +13,7 @@ WIDTH = 80  # Width of the menu
 SCRIPT_DIR = "iso3dfd-st7/BashScripts"
 
 scripts = {
-    "Stochastic Tunneling": {"filename": "foo1.py", "args": ["--bar1", "--bar2"]},
+    "Stochastic Tunneling": {"filename": "BaschScript-StochasticTunneling", "args": ["--num_starters", "--step_size", "--temperature_initial", "--max_iteration", "--max_k"]},
     "Grid Search": {"filename": "BashScript-GridSearch", "args": ["--start", "--end", "--step"]},
     "CMA-ES": {"filename": "foo3.py", "args": ["--qux1", "--qux2"]},
 }
