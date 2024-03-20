@@ -66,7 +66,7 @@ def get_sbatch_parameters():
 def get_arguments(args):
     selected_arguments = []
     for arg in args:
-        value = input(f"Value for {BOLD}{arg}{RESET} (leave empty if not used): ")
+        value = input(f"Value for {BOLD}{arg}{RESET} (leave empty for default value): ")
         if value:
             selected_arguments.append(arg)
             selected_arguments.append(value)
