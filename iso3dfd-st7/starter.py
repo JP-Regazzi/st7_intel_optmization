@@ -28,7 +28,7 @@ def run_process(parameters):
     result = result.stdout 
     gflops = float(extract_fitness(result)[:5])
 
-    print(f"GFlops: {gflops}")
+    #print(f"GFlops: {gflops}")
     return gflops
 
 def run_process_parametrized(cache_parameters):
@@ -42,7 +42,7 @@ def run_process_parametrized(cache_parameters):
 
     gflops = float(extract_fitness(result)[:5])
 
-    print(f"Parameters: {parameters} GFlops: {gflops}")
+    #print(f"Parameters: {parameters} GFlops: {gflops}")
     return gflops
 
 if __name__ == '__main__':
