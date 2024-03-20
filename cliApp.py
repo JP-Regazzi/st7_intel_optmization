@@ -15,6 +15,8 @@ SCRIPT_DIR = "iso3dfd-st7/BashScripts"
 scripts = {
     "Stochastic Tunneling": {"filename": "BashScript-StochasticTunneling", "args": ["--num_starters", "--step_size", "--temperature_initial", "--max_iteration", "--max_k"]},
     "Grid Search": {"filename": "BashScript-GridSearch", "args": ["--start", "--end", "--step"]},
+    "Hill Climbing": {"filename": "BashScript-HillClimbing", "args": ["--max_stable_runs", "--step_size"]},
+    "Guided Hill Climbing": {"filename": "BashScript-GuidedHillClimbing", "args": ["--max_stable_runs", "--step_size"]},
     "CMA-ES": {"filename": "foo3.py", "args": ["--qux1", "--qux2"]},
 }
 

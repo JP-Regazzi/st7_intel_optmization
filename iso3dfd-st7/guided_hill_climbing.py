@@ -1,6 +1,7 @@
 import random
 from mpi4py import MPI
 from starter import run_process_parametrized
+import argparse
 
 
 def update_parameters(parameters, step_size):
@@ -115,7 +116,12 @@ def main(max_stable_runs, step_size):
     return None
 
 # Parameters
-max_stable_runs = 20
-step_size = 4
 
-main(max_stable_runs, step_size)
+if __name__ == '__main__':
+    # Parse command line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--max_stable_runs", type=int, default=20, help="Maximum number of stable runs")
+    parser.add_argument("--step_size", type=int, default=4, help="Step size for parameter update")
+    args = parser.parse_args()
+
+    main(args.max_stable_runs, args.step_size)
