@@ -18,6 +18,7 @@ scripts = {
     "Hill Climbing": {"filename": "BashScript-HillClimbing", "args": ["--max_stable_runs", "--step_size"]},
     "Guided Hill Climbing": {"filename": "BashScript-GuidedHillClimbing", "args": ["--max_stable_runs", "--step_size"]},
     "CMA-ES": {"filename": "foo3.py", "args": ["--qux1", "--qux2"]},
+    "Discrete Bayesian Optimization": {"filename": "foo4.py", "args": ["--qux1", "--qux2"]},
 }
 
 def display_header():
