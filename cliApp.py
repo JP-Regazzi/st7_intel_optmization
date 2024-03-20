@@ -110,7 +110,11 @@ while True:
         selected_arguments = get_arguments(script_args)
         nodes, tasks_per_node, partition, qos = get_sbatch_parameters()
         script_path = os.path.join(SCRIPT_DIR, script_filename)
-
+        # delete the output file if it exists
+        try:
+            os.remove(f"{script_name.replace(' ', '')}.txt")
+        except FileNotFoundError:
+            pass
         command = ['sbatch', '-N', nodes, '-n', tasks_per_node, '-p', partition, f'--qos={qos}',
                    f'--output={script_name.replace(" ", "")}.txt', script_path] + selected_arguments
 
