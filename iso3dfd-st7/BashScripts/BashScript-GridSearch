@@ -7,16 +7,30 @@ source /etc/profile
 # Modules
 module load py-mpi4py/3.1.4/gcc-12.3.0-openmpi
 
-# Move do tmp dir
- cd ..
+# Move to parent directory
+cd ..
 
-# parse range_start, range_end and range_step arguments
-range_start=$1
-range_end=$2
-range_step=$3
+# Initialize default values for variables
+range_start=32
+range_end=256
+range_step=32
+
+# Parse named arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --start) range_start="$2"; shift ;;
+        --end) range_end="$2"; shift ;;
+        --step) range_step="$2"; shift ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
 
 # Execute code
 echo "=============================="
 echo "Grid search on 4 nodes - no threads"
 /usr/bin/mpirun -np 4 -map-by ppr:1:socket:PE=8 -rank-by core python3 grid_search.py --start $range_start --end $range_end --step $range_step
-echo "============================="
+echo "=============================="
+
+
+#  sbatch -N 1 -n 32 -p cpu_prod --qos=8nodespu --output=grid.txt BashScript-GridSearch --start 32 --end 256 --step 32

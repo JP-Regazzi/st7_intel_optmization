@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+import time
 
 RED = "\033[31m"
 GREEN = "\033[32m"
@@ -9,9 +10,11 @@ BOLD = "\033[1m"
 RESET = "\033[0m"
 WIDTH = 80  # Width of the menu
 
+SCRIPT_DIR = "iso3dfd-st7/BashScripts"
+
 scripts = {
     "Stochastic Tunneling": {"filename": "foo1.py", "args": ["--bar1", "--bar2"]},
-    "Grid Search": {"filename": "foo2.py", "args": ["--baz1", "--baz2"]},
+    "Grid Search": {"filename": "BashScript-GridSearch", "args": ["--start", "--end", "--step"]},
     "CMA-ES": {"filename": "foo3.py", "args": ["--qux1", "--qux2"]},
 }
 
@@ -62,10 +65,21 @@ def get_arguments(args):
             selected_arguments.append(value)
     return selected_arguments
 
-def display_results(output, error):
+def display_results(output, error, output_filename):
     print(BOLD + "Output:" + RESET)
-    print(GREEN + output + RESET if output else "No output.")
-    if error:
+    if not error:
+        print(GREEN + "Monitoring output file (press Ctrl+C to stop):" + RESET)
+        try:
+            with open(output_filename, 'r') as file:
+                while True:
+                    lines = file.readlines()[-10:]  # Read last 10 lines of the file
+                    print('\n'.join(lines))
+                    time.sleep(1)  # Wait for 1 second before reading the file again
+        except KeyboardInterrupt:
+            print(BOLD + YELLOW + "\nStopped monitoring file." + RESET)
+        except Exception as e:
+            print(BOLD + RED + f"Error while reading file: {e}" + RESET)
+    else:
         print(BOLD + RED + "Script Errors:" + RESET)
         print(RED + error + RESET)
     input("Press Enter to return to the menu...")  # Wait for user input to return to the menu
@@ -83,8 +97,10 @@ while True:
         script_args = script_info['args']
         print(f"\n{BOLD}{YELLOW}Running {script_name}...{RESET}")
         selected_arguments = get_arguments(script_args)
-        command = ["python3", script_filename] + selected_arguments
+        command = [f'sbatch -N 1 -n 32 -p cpu_prod --qos=8nodespu --output={script_name}.txt {SCRIPT_DIR+script_filename}'] + selected_arguments
+        #command = ["python3", script_filename] + selected_arguments
         result = subprocess.run(command, capture_output=True, text=True)
-        display_results(result.stdout, result.stderr)
+        #results are in a .txt file named script_name.txt. loop to read the file and print the results
+        display_results(result.stdout, result.stderr, f"{script_name}.txt")
     else:
         print(BOLD + RED + "Invalid choice. Please try again." + RESET)
