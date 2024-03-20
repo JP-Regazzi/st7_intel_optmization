@@ -73,6 +73,7 @@ def get_arguments(args):
     return selected_arguments
 
 def display_results(output, error, output_filename):
+    output_filename = output_filename.replace(" ", "")
     print(BOLD + "Output:" + RESET)
     if not error:
         print(GREEN + "Monitoring output file (press Ctrl+C to stop):" + RESET)
