@@ -17,13 +17,15 @@ def hill_climbing(initial_parameters, step_size, max_stable_runs):
     stable_runs = 0
 
     current_parameters = initial_parameters
-    current_gflops, number_of_runs = run_process_parametrized(current_parameters), number_of_runs + 1
+    i, j, k = current_parameters[0], current_parameters[1], current_parameters[2]
+    current_gflops, number_of_runs = run_process_parametrized(i, j, k), number_of_runs + 1
 
     while True:
 
         # Update parameters
         neighbor_parameters = update_parameters(current_parameters, step_size)
-        neighbor_gflops, number_of_runs = run_process_parametrized(neighbor_parameters), number_of_runs + 1
+        neighbor_i, neighbor_j, neighbor_k = neighbor_parameters[0], neighbor_parameters[1], neighbor_parameters[2]
+        neighbor_gflops, number_of_runs = run_process_parametrized(neighbor_i, neighbor_j, neighbor_k), number_of_runs + 1
 
         if neighbor_gflops > current_gflops:
             current_parameters = neighbor_parameters    
