@@ -10,7 +10,7 @@ BOLD = "\033[1m"
 RESET = "\033[0m"
 WIDTH = 80  # Width of the menu
 
-SCRIPT_DIR = "iso3dfd-st7/BashScripts"
+SCRIPT_DIR = "iso3dfd-st7/BashScripts/"
 
 scripts = {
     "Stochastic Tunneling": {"filename": "foo1.py", "args": ["--bar1", "--bar2"]},
