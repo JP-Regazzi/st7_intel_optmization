@@ -97,7 +97,7 @@ while True:
         script_args = script_info['args']
         print(f"\n{BOLD}{YELLOW}Running {script_name}...{RESET}")
         selected_arguments = get_arguments(script_args)
-        command = [f'sbatch -N 1 -n 32 -p cpu_prod --qos=8nodespu --output={script_name.strip(" ")}.txt {SCRIPT_DIR+script_filename}'] + selected_arguments
+        command = [f'sbatch -N 1 -n 32 -p cpu_prod --qos=8nodespu --output={script_name.replace(" ", "")}.txt {SCRIPT_DIR+script_filename}'] + selected_arguments
         #command = ["python3", script_filename] + selected_arguments
         result = subprocess.run(command, capture_output=True, text=True)
         #results are in a .txt file named script_name.txt. loop to read the file and print the results
