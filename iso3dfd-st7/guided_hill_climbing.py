@@ -48,8 +48,8 @@ def guided_hill_climbing(initial_parameters, step_size, max_stable_runs):
         if covered_area:
             neighbor_gflops = value
         else:
-            neighbor_i, neighbor_j, neighbor_k = neighbor_parameters[0], neighbor_parameters[1], neighbor_parameters[2]
-            neighbor_gflops, number_of_runs = run_process_parametrized(neighbor_i, neighbor_j, neighbor_k), number_of_runs + 1
+            #neighbor_i, neighbor_j, neighbor_k = neighbor_parameters[0], neighbor_parameters[1], neighbor_parameters[2]
+            neighbor_gflops, number_of_runs = run_process_parametrized(neighbor_parameters), number_of_runs + 1
             
         if neighbor_gflops > current_gflops:
             if init_zone:

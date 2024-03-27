@@ -19,7 +19,7 @@ def parallel_grid_search(comm, grid_values_i, grid_values_j, grid_values_k):
     for i in grid_values_i[start_i:end_i]:
         for j in grid_values_j:
             for k in grid_values_k:
-                temp_result = starter.run_process_parametrized(i, j, k)
+                temp_result = starter.run_process_parametrized([i, j, k])
                 if temp_result > current_maximum_local:
                     current_maximum_local = temp_result
                     best_points_local = (i, j, k)

@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=4
+#SBATCH --time=10
 
 # Source
 source /etc/profile
