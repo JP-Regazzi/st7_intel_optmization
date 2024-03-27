@@ -1,18 +1,24 @@
 #!/bin/bash
-#SBATCH --time=10
+#SBATCH --time=30
 # Parse named arguments
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        --max_stable_runs) num_starters="$2"; shift ;;
-        --step_size) step_size="$2"; shift ;;
+        --sigma) sigma="$2"; shift ;;
+        --population_size) population_size="$2"; shift ;;
+        --lower_bound) lower_bound="$2"; shift ;;
+        --upper_bound) upper_bound="$2"; shift ;;
+        --nodes) nodes="$2"; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
 done
 
 # Set default values if arguments are not provided
-population_size=${step_size:-16}
-sigma=${max_stable_runs:-4}
+population_size=${population_size:-4}
+sigma=${sigma:-8}
+lower_bound=${lower_bound:-32}
+upper_bound=${upper_bound:-256}
+nodes=${nodes:-8} # Set default nodes value if not provided
 
 # Source
 source /etc/profile
@@ -25,8 +31,10 @@ cd ~/st7_intel_optmization/iso3dfd-st7/
 
 # Execute code
 echo "=============================="
-echo "Guided Hill"
-/usr/bin/mpirun -np 4 -map-by ppr:1:socket:PE=8 -rank-by core python3 cma_es.py \
+echo "CMA-ES"
+/usr/bin/mpirun -np $nodes -map-by ppr:1:node:PE=16 -rank-by node python3 cma_es.py \
     --population_size $population_size \
-    --sigma $sigma
+    --sigma $sigma \
+    --lower_bound $lower_bound \
+    --upper_bound $upper_bound
 echo "=============================="

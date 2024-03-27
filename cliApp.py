@@ -35,8 +35,8 @@ scripts = {
     },
     "CMA-ES": {
         "filename": "BashScript-CMA-ES",
-        "args": ["--sigma", "--population_size"],
-        "default_args": ["4", "16"]
+        "args": ["--sigma", "--population_size", "--lower_bound", "--upper_bound"],
+        "default_args": ["8", "4", "32", "256"]
     },
 }
 
@@ -95,7 +95,7 @@ def display_menu():
 
 def get_sbatch_parameters():
     nodes = input(f"Enter the number of nodes (default: 1): ") or "1"
-    tasks_per_node = input(f"Enter the number of tasks per node (default: 32): ") or "32"
+    tasks_per_node = str(int(nodes)*32)
     partition = input(f"Enter the partition (default: cpu_prod): ") or "cpu_prod"
     qos = input(f"Enter the QOS (default: 8nodespu): ") or "8nodespu"
     return nodes, tasks_per_node, partition, qos
@@ -130,9 +130,9 @@ def display_results(output, error, output_filename):
                             last_line_count = len(lines)
                 except FileNotFoundError:
                     if not waiting_message_printed:
-                        print(YELLOW + f"Waiting for {output_filename} to be created..." + RESET)
+                        print(YELLOW + f"Waiting for the slurm process to start..." + RESET)
                         waiting_message_printed = True
-                time.sleep(1)  # Wait for 1 second before reading the file again
+                time.sleep(0.1)  # Wait for 1 second before reading the file again
         except KeyboardInterrupt:
             print(BOLD + YELLOW + "\nStopped monitoring file." + RESET)
         except Exception as e:
