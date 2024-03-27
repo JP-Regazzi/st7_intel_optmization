@@ -27,6 +27,6 @@ cd ~/st7_intel_optmization/iso3dfd-st7/
 echo "=============================="
 echo "Guided Hill"
 /usr/bin/mpirun -np 4 -map-by ppr:1:socket:PE=8 -rank-by core python3 cma_es.py \
-    --population_size $max_stable_runs \
-    --sigma $step_size
+    --population_size $population_size \
+    --sigma $sigma
 echo "=============================="

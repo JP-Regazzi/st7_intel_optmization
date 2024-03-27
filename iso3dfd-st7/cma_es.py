@@ -88,7 +88,6 @@ def parallel_cma_es(comm, initial_point, sigma, population_size, bounds):
                 file.write(f"Process {i},{solution[2]}\n")
 
 if __name__ == "__main__":
-    # fetch sigma and population size from the user
     parser = argparse.ArgumentParser(description='CMA-ES for iso3dfd-st7')
     parser.add_argument('--sigma', type=float, default=4, help='Sigma for CMA-ES')
     parser.add_argument('--population_size', type=int, default=16, help='Population size for CMA-ES')
