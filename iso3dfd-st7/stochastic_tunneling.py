@@ -2,6 +2,7 @@ import random
 import math
 from starter import run_process
 from mpi4py import MPI
+import argparse
 
 
 def generate_starting_points(num_starting_points):
@@ -150,6 +151,7 @@ def main(step_size, temperature_initial, max_iteration, max_k):
     return None
 
 
+<<<<<<< HEAD
 
 step_size = 2
 temperature_initial = 1000
@@ -158,3 +160,15 @@ max_k = 5
 
 
 main(step_size, temperature_initial, max_iteration, max_k)
+=======
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Stochastic Tunneling')
+    parser.add_argument('--num_starters', type=int, default=3, help='Number of starting points')
+    parser.add_argument('--step_size', type=int, default=2, help='Step size')
+    parser.add_argument('--temperature_initial', type=int, default=1000, help='Initial temperature')
+    parser.add_argument('--max_iteration', type=int, default=50, help='Maximum number of iterations')
+    parser.add_argument('--max_k', type=int, default=5, help='Maximum value of k')
+    args = parser.parse_args()
+
+    main(args.num_starters, args.step_size, args.temperature_initial, args.max_iteration, args.max_k)
+>>>>>>> cli

@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+import time
 
 RED = "\033[31m"
 GREEN = "\033[32m"
@@ -9,10 +10,15 @@ BOLD = "\033[1m"
 RESET = "\033[0m"
 WIDTH = 80  # Width of the menu
 
+SCRIPT_DIR = "iso3dfd-st7/BashScripts"
+
 scripts = {
-    "Stochastic Tunneling": {"filename": "foo1.py", "args": ["--bar1", "--bar2"]},
-    "Grid Search": {"filename": "foo2.py", "args": ["--baz1", "--baz2"]},
+    "Stochastic Tunneling": {"filename": "BashScript-StochasticTunneling", "args": ["--num_starters", "--step_size", "--temperature_initial", "--max_iteration", "--max_k"]},
+    "Grid Search": {"filename": "BashScript-GridSearch", "args": ["--start", "--end", "--step"]},
+    "Hill Climbing": {"filename": "BashScript-HillClimbing", "args": ["--max_stable_runs", "--step_size"]},
+    "Guided Hill Climbing": {"filename": "BashScript-GuidedHillClimbing", "args": ["--max_stable_runs", "--step_size"]},
     "CMA-ES": {"filename": "foo3.py", "args": ["--qux1", "--qux2"]},
+    "Discrete Bayesian Optimization": {"filename": "foo4.py", "args": ["--qux1", "--qux2"]},
 }
 
 def display_header():
@@ -53,19 +59,48 @@ def display_menu():
     choice = input("Enter the number of the script to run: ")
     return choice
 
+def get_sbatch_parameters():
+    nodes = input(f"Enter the number of nodes (default: 1): ") or "1"
+    tasks_per_node = input(f"Enter the number of tasks per node (default: 32): ") or "32"
+    partition = input(f"Enter the partition (default: cpu_prod): ") or "cpu_prod"
+    qos = input(f"Enter the QOS (default: 8nodespu): ") or "8nodespu"
+    return nodes, tasks_per_node, partition, qos
+
 def get_arguments(args):
     selected_arguments = []
     for arg in args:
-        value = input(f"Value for {BOLD}{arg}{RESET} (leave empty if not used): ")
+        value = input(f"Value for {BOLD}{arg}{RESET} (leave empty for default value): ")
         if value:
             selected_arguments.append(arg)
             selected_arguments.append(value)
     return selected_arguments
 
-def display_results(output, error):
+def display_results(output, error, output_filename):
+    output_filename = output_filename.replace(" ", "")
     print(BOLD + "Output:" + RESET)
-    print(GREEN + output + RESET if output else "No output.")
-    if error:
+    if not error:
+        print(GREEN + "Monitoring output file (press Ctrl+C to stop):" + RESET)
+        last_line_count = 0
+        waiting_message_printed = False
+        try:
+            while True:
+                try:
+                    with open(output_filename, 'r') as file:
+                        lines = file.readlines()
+                        if len(lines) > last_line_count:
+                            new_lines = lines[last_line_count:]
+                            print(''.join(new_lines), end='')
+                            last_line_count = len(lines)
+                except FileNotFoundError:
+                    if not waiting_message_printed:
+                        print(YELLOW + f"Waiting for {output_filename} to be created..." + RESET)
+                        waiting_message_printed = True
+                time.sleep(1)  # Wait for 1 second before reading the file again
+        except KeyboardInterrupt:
+            print(BOLD + YELLOW + "\nStopped monitoring file." + RESET)
+        except Exception as e:
+            print(BOLD + RED + f"Error while reading file: {e}" + RESET)
+    else:
         print(BOLD + RED + "Script Errors:" + RESET)
         print(RED + error + RESET)
     input("Press Enter to return to the menu...")  # Wait for user input to return to the menu
@@ -83,8 +118,20 @@ while True:
         script_args = script_info['args']
         print(f"\n{BOLD}{YELLOW}Running {script_name}...{RESET}")
         selected_arguments = get_arguments(script_args)
-        command = ["python3", script_filename] + selected_arguments
-        result = subprocess.run(command, capture_output=True, text=True)
-        display_results(result.stdout, result.stderr)
+        nodes, tasks_per_node, partition, qos = get_sbatch_parameters()
+        script_path = os.path.join(SCRIPT_DIR, script_filename)
+        # delete the output file if it exists
+        try:
+            os.remove(f"{script_name.replace(' ', '')}.txt")
+        except FileNotFoundError:
+            pass
+        command = ['sbatch', '-N', nodes, '-n', tasks_per_node, '-p', partition, f'--qos={qos}',
+                   f'--output={script_name.replace(" ", "")}.txt', script_path] + selected_arguments
+
+        try:
+            result = subprocess.run(command, capture_output=True, text=True, shell=False)
+            display_results(result.stdout, result.stderr, f"{script_name.replace(' ', '')}.txt")
+        except Exception as e:
+            print(f"An error occurred while trying to execute the script: {e}")
     else:
         print(BOLD + RED + "Invalid choice. Please try again." + RESET)

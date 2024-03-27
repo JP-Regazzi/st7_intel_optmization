@@ -1,6 +1,7 @@
 import random
 from mpi4py import MPI
 from starter import run_process_parametrized
+import argparse
 
 def update_parameters(parameters, step_size):
     # Ensure the first element is divisible by 16
@@ -16,13 +17,15 @@ def hill_climbing(initial_parameters, step_size, max_stable_runs):
     stable_runs = 0
 
     current_parameters = initial_parameters
-    current_gflops, number_of_runs = run_process_parametrized(current_parameters), number_of_runs + 1
+    i, j, k = current_parameters[0], current_parameters[1], current_parameters[2]
+    current_gflops, number_of_runs = run_process_parametrized(i, j, k), number_of_runs + 1
 
     while True:
 
         # Update parameters
         neighbor_parameters = update_parameters(current_parameters, step_size)
-        neighbor_gflops, number_of_runs = run_process_parametrized(neighbor_parameters), number_of_runs + 1
+        neighbor_i, neighbor_j, neighbor_k = neighbor_parameters[0], neighbor_parameters[1], neighbor_parameters[2]
+        neighbor_gflops, number_of_runs = run_process_parametrized(neighbor_i, neighbor_j, neighbor_k), number_of_runs + 1
 
         if neighbor_gflops > current_gflops:
             current_parameters = neighbor_parameters    
@@ -83,8 +86,10 @@ def main(max_stable_runs, step_size):
     return None
 
 
-# Parameters
-max_stable_runs = 20
-step_size = 4
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--max_stable_runs", type=int, default=20, help="Maximum number of stable runs")
+    parser.add_argument("--step_size", type=int, default=4, help="Step size for parameter update")
+    args = parser.parse_args()
 
-main(max_stable_runs, step_size)
+    main(args.max_stable_runs, args.step_size)

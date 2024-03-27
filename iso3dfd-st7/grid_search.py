@@ -1,7 +1,7 @@
 from mpi4py import MPI
 import numpy as np
 import starter
-
+import argparse
 
 def parallel_grid_search(comm, grid_values_i, grid_values_j, grid_values_k):
     # Get MPI node attributes
@@ -19,7 +19,7 @@ def parallel_grid_search(comm, grid_values_i, grid_values_j, grid_values_k):
     for i in grid_values_i[start_i:end_i]:
         for j in grid_values_j:
             for k in grid_values_k:
-                temp_result = starter.run_process_parametrized([i, j, k])
+                temp_result = starter.run_process_parametrized(i, j, k)
                 if temp_result > current_maximum_local:
                     current_maximum_local = temp_result
                     best_points_local = (i, j, k)
@@ -36,12 +36,19 @@ def parallel_grid_search(comm, grid_values_i, grid_values_j, grid_values_k):
         print("Current Maximum:", current_maximum_global[global_best_index])
         print("Total number of runs:", len(grid_values_i)*len(grid_values_j)*len(grid_values_k))
 
+def main():
+    comm = MPI.COMM_WORLD
+    parser = argparse.ArgumentParser(description='Grid search for iso3dfd-st7')
+    parser.add_argument('--start', type=int, default=32, help='Grid range start')
+    parser.add_argument('--end', type=int, default=256, help='Grid range end')
+    parser.add_argument('--step', type=int, default=32, help='Grid range step')
+    args = parser.parse_args()
 
+    grid_values_i = range(args.start, args.end, args.step)
+    grid_values_j = range(args.start, args.end, args.step)
+    grid_values_k = range(args.start, args.end, args.step)
 
-comm = MPI.COMM_WORLD
+    parallel_grid_search(comm, grid_values_i, grid_values_j, grid_values_k)
 
-grid_values_i = range(32, 256, 32)
-grid_values_j = range(32, 256, 32)
-grid_values_k = range(32, 256, 32)
-
-parallel_grid_search(comm, grid_values_i, grid_values_j, grid_values_k)
+if __name__ == '__main__':
+    main()
