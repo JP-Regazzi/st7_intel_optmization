@@ -13,13 +13,47 @@ WIDTH = 80  # Width of the menu
 SCRIPT_DIR = "iso3dfd-st7/BashScripts"
 
 scripts = {
-    "Stochastic Tunneling": {"filename": "BashScript-StochasticTunneling", "args": ["--num_starters", "--step_size", "--temperature_initial", "--max_iteration", "--max_k"]},
-    "Grid Search": {"filename": "BashScript-GridSearch", "args": ["--start", "--end", "--step"]},
-    "Hill Climbing": {"filename": "BashScript-HillClimbing", "args": ["--max_stable_runs", "--step_size"]},
-    "Guided Hill Climbing": {"filename": "BashScript-GuidedHillClimbing", "args": ["--max_stable_runs", "--step_size"]},
-    "CMA-ES": {"filename": "foo3.py", "args": ["--qux1", "--qux2"]},
-    "Discrete Bayesian Optimization": {"filename": "foo4.py", "args": ["--qux1", "--qux2"]},
+    "Stochastic Tunneling": {
+        "filename": "BashScript-StochasticTunneling",
+        "args": ["--num_starters", "--step_size", "--temperature_initial", "--max_iteration", "--max_k"],
+        "default_args": ["3", "2", "1000", "50", "5"]
+    },
+    "Grid Search": {
+        "filename": "BashScript-GridSearch",
+        "args": ["--start", "--end", "--step"],
+        "default_args": ["32", "256", "32"]
+    },
+    "Hill Climbing": {
+        "filename": "BashScript-HillClimbing",
+        "args": ["--max_stable_runs", "--step_size"],
+        "default_args": ["4", "2"]
+    },
+    "Guided Hill Climbing": {
+        "filename": "BashScript-GuidedHillClimbing",
+        "args": ["--max_stable_runs", "--step_size"],
+        "default_args": ["4", "2"]
+    },
+    "CMA-ES": {
+        "filename": "BashScript-CMA-ES",
+        "args": ["--sigma", "--population_size"],
+        "default_args": ["4", "16"]
+    },
 }
+
+BOLD = "\033[1m"
+RESET = "\033[0m"
+
+def get_arguments(args, default_args):
+    selected_arguments = []
+    for arg, default_value in zip(args, default_args):
+        value = input(f"Value for {BOLD}{arg}{RESET} (default: {default_value}): ")
+        if value:
+            selected_arguments.append(arg)
+            selected_arguments.append(value)
+        else:
+            selected_arguments.append(arg)
+            selected_arguments.append(default_value)
+    return selected_arguments
 
 def display_header():
     # Define color codes
@@ -66,13 +100,16 @@ def get_sbatch_parameters():
     qos = input(f"Enter the QOS (default: 8nodespu): ") or "8nodespu"
     return nodes, tasks_per_node, partition, qos
 
-def get_arguments(args):
+def get_arguments(args, default_args):
     selected_arguments = []
-    for arg in args:
-        value = input(f"Value for {BOLD}{arg}{RESET} (leave empty for default value): ")
+    for arg, default_value in zip(args, default_args):
+        value = input(f"Value for {BOLD}{arg}{RESET} (default: {default_value}): ")
         if value:
             selected_arguments.append(arg)
             selected_arguments.append(value)
+        else:
+            selected_arguments.append(arg)
+            selected_arguments.append(default_value)
     return selected_arguments
 
 def display_results(output, error, output_filename):
@@ -105,33 +142,38 @@ def display_results(output, error, output_filename):
         print(RED + error + RESET)
     input("Press Enter to return to the menu...")  # Wait for user input to return to the menu
 
-while True:
-    choice = display_menu()
-    if choice == "0":
-        print(BOLD + RED + "Exiting..." + RESET)
-        break
-    elif choice in [str(i) for i in range(1, len(scripts) + 1)]:
-        script_index = int(choice) - 1
-        script_info = list(scripts.values())[script_index]
-        script_filename = script_info['filename']
-        script_name = list(scripts.keys())[script_index]
-        script_args = script_info['args']
-        print(f"\n{BOLD}{YELLOW}Running {script_name}...{RESET}")
-        selected_arguments = get_arguments(script_args)
-        nodes, tasks_per_node, partition, qos = get_sbatch_parameters()
-        script_path = os.path.join(SCRIPT_DIR, script_filename)
-        # delete the output file if it exists
-        try:
-            os.remove(f"{script_name.replace(' ', '')}.txt")
-        except FileNotFoundError:
-            pass
-        command = ['sbatch', '-N', nodes, '-n', tasks_per_node, '-p', partition, f'--qos={qos}',
-                   f'--output={script_name.replace(" ", "")}.txt', script_path] + selected_arguments
+def main():
+    while True:
+        choice = display_menu()
+        if choice == "0":
+            print(BOLD + RED + "Exiting..." + RESET)
+            break
+        elif choice in [str(i) for i in range(1, len(scripts) + 1)]:
+            script_index = int(choice) - 1
+            script_info = list(scripts.values())[script_index]
+            script_filename = script_info['filename']
+            script_name = list(scripts.keys())[script_index]
+            script_args = script_info['args']
+            script_default_args = script_info['default_args']
+            print(f"\n{BOLD}{YELLOW}Running {script_name}...{RESET}")
+            selected_arguments = get_arguments(script_args, script_default_args)
+            nodes, tasks_per_node, partition, qos = get_sbatch_parameters()
+            script_path = os.path.join(SCRIPT_DIR, script_filename)
+            # delete the output file if it exists
+            try:
+                os.remove(f"{script_name.replace(' ', '')}.txt")
+            except FileNotFoundError:
+                pass
+            command = ['sbatch', '-N', nodes, '-n', tasks_per_node, '-p', partition, f'--qos={qos}',
+                    f'--output={script_name.replace(" ", "")}.txt', script_path] + selected_arguments
 
-        try:
-            result = subprocess.run(command, capture_output=True, text=True, shell=False)
-            display_results(result.stdout, result.stderr, f"{script_name.replace(' ', '')}.txt")
-        except Exception as e:
-            print(f"An error occurred while trying to execute the script: {e}")
-    else:
-        print(BOLD + RED + "Invalid choice. Please try again." + RESET)
+            try:
+                result = subprocess.run(command, capture_output=True, text=True, shell=False)
+                display_results(result.stdout, result.stderr, f"{script_name.replace(' ', '')}.txt")
+            except Exception as e:
+                print(f"An error occurred while trying to execute the script: {e}")
+        else:
+            print(BOLD + RED + "Invalid choice. Please try again." + RESET)
+
+if __name__ == "__main__":
+    main()
