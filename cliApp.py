@@ -12,6 +12,10 @@ WIDTH = 80  # Width of the menu
 
 SCRIPT_DIR = "iso3dfd-st7/BashScripts"
 
+#TODO: add the nb nodes as a parameter to the bash scripts
+#TODO: rename the bash scripts to remove the "BashScript-" prefix, and add the extension ".sh"
+
+
 scripts = {
     "Stochastic Tunneling": {
         "filename": "BashScript-StochasticTunneling",
