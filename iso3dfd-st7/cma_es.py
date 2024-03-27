@@ -2,6 +2,7 @@ from mpi4py import MPI
 import numpy as np
 import cma
 import starter
+import argparse
 
 call_count = 0
 
@@ -54,12 +55,19 @@ def parallel_cma_es(comm, initial_point, sigma, population_size, bounds):
         print("Global Best Fitness:", global_best_solution[1])
         print("Total Calls to Cost Function:", call_count)
 
+if __name__ == "__main__":
+    # fetch sigma and population size from the user
+    parser = argparse.ArgumentParser(description='CMA-ES for iso3dfd-st7')
+    parser.add_argument('--sigma', type=float, default=4, help='Sigma for CMA-ES')
+    parser.add_argument('--population_size', type=int, default=16, help='Population size for CMA-ES')
+    args = parser.parse_args()
 
-comm = MPI.COMM_WORLD
+    sigma = args.sigma
+    population_size = args.population_size
 
-initial_point = np.array([128, 128, 128])
-sigma = 32
-population_size = 16
-bounds = [[32, 256]]  # Lower and upper bounds for all parameters
+    bounds = [[32, 256]]  # Lower and upper bounds for all parameters
+    initial_point = np.random.randint(bounds[0][0], bounds[0][1], size=3)
 
-parallel_cma_es(comm, initial_point, sigma, population_size, bounds)
+    comm = MPI.COMM_WORLD
+
+    parallel_cma_es(comm, initial_point, sigma, population_size, bounds)
