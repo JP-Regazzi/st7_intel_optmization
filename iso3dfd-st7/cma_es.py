@@ -74,7 +74,7 @@ def parallel_cma_es(comm, sigma, population_size, bounds_legacy, compilation):
 
         # Save process number, call count, and best fitness to a txt file
         with open("data/process_data.txt", "a") as file:
-            file.write(f"{rank},{process_call_count},{-local_best_fitness[0]}\n")
+            file.write(f"{rank},{process_call_count},{-local_best_fitness[0]}, {es.sigma}\n")
 
     if rank == 0:
         print(f"Process {rank} - Best Solution: {np.rint(local_best_solution).astype(int)}")
