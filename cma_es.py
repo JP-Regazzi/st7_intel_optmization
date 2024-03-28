@@ -11,13 +11,13 @@ from cma.evolution_strategy import InjectionWarning
 
 warnings.simplefilter("ignore", InjectionWarning)
 
-def objective(x, compilation):
+def objective(x):
     i, j, k = x
     i_sixteened = int(round(i / 16) * 16)
     x_scaled = i_sixteened, j, k
-    return -starter.run_process_parametrized(x_scaled, compilation)
+    return -starter.run_process_parametrized(x_scaled)
 
-def parallel_cma_es(comm, sigma, population_size, bounds_legacy, compilation):
+def parallel_cma_es(comm, sigma, population_size, bounds_legacy):
     rank = comm.Get_rank()
     size = comm.Get_size()
 
@@ -31,7 +31,7 @@ def parallel_cma_es(comm, sigma, population_size, bounds_legacy, compilation):
 
     process_call_count = 0
 
-    es = cma.CMAEvolutionStrategy(initial_point, sigma, {'bounds': bounds, 'popsize':population_size})
+    es = cma.CMAEvolutionStrategy(initial_point, sigma, {'bounds': bounds, 'popsize':population_size, 'AdaptSigma':True})
     es.opts['bounds'] = bounds
 
     while not es.stop():
@@ -74,7 +74,7 @@ def parallel_cma_es(comm, sigma, population_size, bounds_legacy, compilation):
 
         # Save process number, call count, and best fitness to a txt file
         with open("data/process_data.txt", "a") as file:
-            file.write(f"{rank},{process_call_count},{-local_best_fitness[0]}\n")
+            file.write(f"{rank},{process_call_count},{-local_best_fitness[0]},{es.sigma}\n")
 
     if rank == 0:
         print(f"Process {rank} - Best Solution: {np.rint(local_best_solution).astype(int)}")
@@ -93,15 +93,13 @@ if __name__ == "__main__":
     parser.add_argument('--population_size', type=int, default=4, help='Population size for CMA-ES')
     parser.add_argument('--lower_bound', type=int, default=32, help='Lower bound')
     parser.add_argument('--upper_bound', type=int, default=256, help='Upper bound')
-    parser.add_argument('--compilation', type=str, default='O3', help='Compilation type')
     args = parser.parse_args()
 
     sigma = args.sigma
     population_size = args.population_size
-    compilation = args.compilation
 
     bounds = np.array([[1, 16]] + [[args.lower_bound, args.upper_bound] for _ in range(2)])
 
     comm = MPI.COMM_WORLD
 
-    parallel_cma_es(comm, sigma, population_size, bounds, compilation)
+    parallel_cma_es(comm, sigma, population_size, bounds)

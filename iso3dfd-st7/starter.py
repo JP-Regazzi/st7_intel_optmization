@@ -31,9 +31,9 @@ def run_process(parameters):
     #print(f"GFlops: {gflops}")
     return gflops
 
-def run_process_parametrized(cache_parameters):
-
-    command = ['bin/iso3dfd_dev13_cpu_avx2.exe']
+def run_process_parametrized(cache_parameters, compilation="O3"):
+    # compilation is either O3 or Ofast
+    command = [f'bin/iso3dfd_dev13_cpu_avx2_{compilation}.exe']
     parameters = ["256", "256", "256", "32", "100", f"{cache_parameters[0]}", f"{cache_parameters[1]}", f"{cache_parameters[2]}"]
     command.extend(parameters)
 
