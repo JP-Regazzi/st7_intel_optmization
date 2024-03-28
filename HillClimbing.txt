@@ -1,0 +1,78 @@
+==============================
+Hill Climbing
+Traceback (most recent call last):
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 95, in <module>
+    main(args.max_stable_runs, args.step_size)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 70, in main
+    params, gflops, number_of_runs = hill_climbing(start_point, step_size, max_stable_runs)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 21, in hill_climbing
+    current_gflops, number_of_runs = run_process_parametrized(i, j, k), number_of_runs + 1
+TypeError: run_process_parametrized() takes 1 positional argument but 3 were given
+Traceback (most recent call last):
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 95, in <module>
+    main(args.max_stable_runs, args.step_size)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 70, in main
+    params, gflops, number_of_runs = hill_climbing(start_point, step_size, max_stable_runs)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 21, in hill_climbing
+    current_gflops, number_of_runs = run_process_parametrized(i, j, k), number_of_runs + 1
+TypeError: run_process_parametrized() takes 1 positional argument but 3 were given
+Traceback (most recent call last):
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 95, in <module>
+    main(args.max_stable_runs, args.step_size)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 70, in main
+    params, gflops, number_of_runs = hill_climbing(start_point, step_size, max_stable_runs)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 21, in hill_climbing
+Traceback (most recent call last):
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 95, in <module>
+    current_gflops, number_of_runs = run_process_parametrized(i, j, k), number_of_runs + 1
+TypeError: run_process_parametrized() takes 1 positional argument but 3 were given
+Traceback (most recent call last):
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 95, in <module>
+Traceback (most recent call last):
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 95, in <module>
+    main(args.max_stable_runs, args.step_size)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 70, in main
+    main(args.max_stable_runs, args.step_size)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 70, in main
+    params, gflops, number_of_runs = hill_climbing(start_point, step_size, max_stable_runs)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 21, in hill_climbing
+    current_gflops, number_of_runs = run_process_parametrized(i, j, k), number_of_runs + 1
+TypeError: run_process_parametrized() takes 1 positional argument but 3 were given
+    params, gflops, number_of_runs = hill_climbing(start_point, step_size, max_stable_runs)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 21, in hill_climbing
+    main(args.max_stable_runs, args.step_size)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 70, in main
+    current_gflops, number_of_runs = run_process_parametrized(i, j, k), number_of_runs + 1
+Traceback (most recent call last):
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 95, in <module>
+    params, gflops, number_of_runs = hill_climbing(start_point, step_size, max_stable_runs)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 21, in hill_climbing
+TypeError: run_process_parametrized() takes 1 positional argument but 3 were given
+    main(args.max_stable_runs, args.step_size)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 70, in main
+    current_gflops, number_of_runs = run_process_parametrized(i, j, k), number_of_runs + 1
+TypeError: run_process_parametrized() takes 1 positional argument but 3 were given
+    params, gflops, number_of_runs = hill_climbing(start_point, step_size, max_stable_runs)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 21, in hill_climbing
+    current_gflops, number_of_runs = run_process_parametrized(i, j, k), number_of_runs + 1
+TypeError: run_process_parametrized() takes 1 positional argument but 3 were given
+Traceback (most recent call last):
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 95, in <module>
+    main(args.max_stable_runs, args.step_size)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 70, in main
+    params, gflops, number_of_runs = hill_climbing(start_point, step_size, max_stable_runs)
+  File "/usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7/hill_climbing.py", line 21, in hill_climbing
+    current_gflops, number_of_runs = run_process_parametrized(i, j, k), number_of_runs + 1
+TypeError: run_process_parametrized() takes 1 positional argument but 3 were given
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[55677,1],7]
+  Exit code:    1
+--------------------------------------------------------------------------
+==============================

@@ -1,0 +1,94 @@
+==============================
+Stochastic Tunneling
+Update:  0
+Update:  0
+Update:  0
+Update:  0
+Update:  0
+Update:  0
+Update:  0
+Update:  0
+Disturbed:  [256, 256, 256, 32, 100, 224, 6, 14]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 224, 6, 14], GFlops: 107.1
+Update:  1
+Disturbed:  [256, 256, 256, 32, 100, 144, 4, 10]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 144, 4, 10], GFlops: 101.3
+Update:  1
+Disturbed:  [256, 256, 256, 32, 100, 224, 12, 16]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 224, 12, 16], GFlops: 99.92
+Update:  1
+Disturbed:  [256, 256, 256, 32, 100, 144, 8, 5]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 144, 8, 5], GFlops: 100.7
+Update:  1
+Disturbed:  [256, 256, 256, 32, 100, 128, 9, 12]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 128, 9, 12], GFlops: 93.67
+Update:  1
+Disturbed:  [256, 256, 256, 32, 100, 112, 10, 12]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 112, 10, 12], GFlops: 91.17
+Update:  1
+Disturbed:  [256, 256, 256, 32, 100, 160, 12, 7]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 160, 12, 7], GFlops: 97.04
+Update:  1
+Disturbed:  [256, 256, 256, 32, 100, 80, 11, 6]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 80, 11, 6], GFlops: 92.43
+Update:  1
+Disturbed:  [256, 256, 256, 32, 100, 224, 6, 11]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 224, 6, 11], GFlops: 109.5
+Update:  2
+Disturbed:  [256, 256, 256, 32, 100, 144, 3, 9]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 144, 3, 9], GFlops: 103.5
+Update:  2
+Disturbed:  [256, 256, 256, 32, 100, 272, 7, 12]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 272, 7, 12], GFlops: 107.9
+Update:  2
+Disturbed:  [256, 256, 256, 32, 100, 224, 9, 16]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 224, 9, 16], GFlops: 104.7
+Update:  2
+Disturbed:  [256, 256, 256, 32, 100, 256, 9, 5]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 256, 9, 5], GFlops: 110.3
+Update:  2
+Disturbed:  [256, 256, 256, 32, 100, 112, 9, 11]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 112, 9, 11], GFlops: 95.73
+Update:  2
+Disturbed:  [256, 256, 256, 32, 100, 144, 10, 6]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 144, 10, 6], GFlops: 96.64
+Update:  2
+Disturbed:  [256, 256, 256, 32, 100, 240, 6, 8]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 240, 6, 8], GFlops: 111.0
+Update:  3
+Disturbed:  [256, 256, 256, 32, 100, 304, 7, 12]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 304, 7, 12], GFlops: 108.7
+Update:  3
+Disturbed:  [256, 256, 256, 32, 100, 224, 4, 12]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 224, 4, 12], GFlops: 108.5
+Update:  3
+Disturbed:  [256, 256, 256, 32, 100, 304, 7, 9]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 304, 7, 9], GFlops: 108.9
+Update:  3
+Disturbed:  [256, 256, 256, 32, 100, 128, 7, 12]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 128, 7, 12], GFlops: 98.44
+Update:  3
+Disturbed:  [256, 256, 256, 32, 100, 144, 9, 6]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 144, 9, 6], GFlops: 99.53
+Update:  3
+Disturbed:  [256, 256, 256, 32, 100, 256, 6, 6]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 256, 6, 6], GFlops: 112.4
+Update:  4
+Disturbed:  [256, 256, 256, 32, 100, 272, 3, 12]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 272, 3, 12], GFlops: 111.4
+Update:  4
+Disturbed:  [256, 256, 256, 32, 100, 320, 7, 10]
+Current Maximum --- Parameters: [256, 256, 256, 32, 100, 320, 7, 10], GFlops: 109.4
+Update:  4
+slurmstepd: error: *** JOB 66337 ON kyle05 CANCELLED AT 2024-03-28T14:08:24 DUE TO TIME LIMIT ***
+--------------------------------------------------------------------------
+ORTE has lost communication with a remote daemon.
+
+  HNP daemon   : [[29876,0],0] on node kyle05
+  Remote daemon: [[29876,0],6] on node kyle11
+
+This is usually due to either a failure of the TCP network
+connection to the node, or possibly an internal failure of
+the daemon itself. We cannot recover from this failure, and
+therefore will terminate the job.
+--------------------------------------------------------------------------

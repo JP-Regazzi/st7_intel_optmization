@@ -42,6 +42,11 @@ scripts = {
         "args": ["--sigma", "--population_size", "--lower_bound", "--upper_bound"],
         "default_args": ["8", "4", "32", "256"]
     },
+    "Bayesian Optimization": {
+        "filename": "BashScript-Bayes",
+        "args": [],
+        "default_args": []
+    },
 }
 
 BOLD = "\033[1m"

@@ -45,6 +45,25 @@ def run_process_parametrized(cache_parameters):
     #print(f"Parameters: {parameters} GFlops: {gflops}")
     return gflops
 
+def run_process_parametrized_args(args):
+    print(args)    
+    i, j, k = int(args[0]), int(args[1]), int(args[2])
+    i = 16*i
+    command = ['bin/iso3dfd_dev13_cpu_avx2.exe']
+    parameters = ["256", "256", "256", "32", "100", f"{i}", f"{j}", f"{k}"]
+    command.extend(parameters)
+
+    result = subprocess.run(command, stdout=subprocess.PIPE, text=True)
+    result = result.stdout 
+    
+    print(result)
+    gflops = float(extract_fitness(result)[:5])
+    
+    print(f"Parameters: {i, j, k} GFlops: {gflops}")
+    return -gflops
+
+
+
 if __name__ == '__main__':
 
     compile()

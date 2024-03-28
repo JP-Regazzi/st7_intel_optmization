@@ -1,0 +1,23 @@
+/var/spool/slurm/slurmd/job66346/slurm_script: line 11: cd: /usr/users/st76i/st76i_5/iso3dfd-st7/demo/iso3dfd-st7/: No such file or directory
+==============================
+Grid search
+python3: can't open file '/usr/users/st76i/st76i_5/demo/st7_intel_optmization/grid_search.py': [Errno 2] No such file or directory
+python3: can't open file '/usr/users/st76i/st76i_5/demo/st7_intel_optmization/grid_search.py': [Errno 2] No such file or directory
+python3: can't open file '/usr/users/st76i/st76i_5/demo/st7_intel_optmization/grid_search.py': [Errno 2] No such file or directory
+python3: can't open file '/usr/users/st76i/st76i_5/demo/st7_intel_optmization/grid_search.py': [Errno 2] No such file or directory
+python3: can't open file '/usr/users/st76i/st76i_5/demo/st7_intel_optmization/grid_search.py': [Errno 2] No such file or directory
+python3: can't open file '/usr/users/st76i/st76i_5/demo/st7_intel_optmization/grid_search.py': [Errno 2] No such file or directory
+python3: can't open file '/usr/users/st76i/st76i_5/demo/st7_intel_optmization/grid_search.py': [Errno 2] No such file or directory
+python3: can't open file '/usr/users/st76i/st76i_5/demo/st7_intel_optmization/grid_search.py': [Errno 2] No such file or directory
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[55696,1],5]
+  Exit code:    2
+--------------------------------------------------------------------------
+==============================

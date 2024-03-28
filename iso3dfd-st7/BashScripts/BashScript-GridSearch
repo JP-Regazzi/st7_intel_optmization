@@ -8,7 +8,7 @@ source /etc/profile
 module load py-mpi4py/3.1.4/gcc-12.3.0-openmpi
 
 # Move to parent directory
-cd ~/st7_intel_optmization/iso3dfd-st7/
+cd /usr/users/st76i/st76i_5/demo/st7_intel_optmization/iso3dfd-st7
 
 # Initialize default values for variables
 range_start=32

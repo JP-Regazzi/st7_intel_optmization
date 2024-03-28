@@ -151,7 +151,6 @@ def main(step_size, temperature_initial, max_iteration, max_k):
     return None
 
 
-<<<<<<< HEAD
 
 step_size = 2
 temperature_initial = 1000
@@ -160,7 +159,7 @@ max_k = 5
 
 
 main(step_size, temperature_initial, max_iteration, max_k)
-=======
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Stochastic Tunneling')
     parser.add_argument('--num_starters', type=int, default=3, help='Number of starting points')
@@ -171,4 +170,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     main(args.num_starters, args.step_size, args.temperature_initial, args.max_iteration, args.max_k)
->>>>>>> cli
