@@ -5,6 +5,7 @@ while [[ "$#" -gt 0 ]]; do
     case $1 in
         --max_stable_runs) num_starters="$2"; shift ;;
         --step_size) step_size="$2"; shift ;;
+        --nodes) nodes="$2"; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -13,6 +14,7 @@ done
 # Set default values if arguments are not provided
 step_size=${step_size:-2}
 max_stable_runs=${max_stable_runs:-4}
+nodes=${nodes:-8}
 
 # Source
 source /etc/profile
@@ -26,7 +28,7 @@ cd ~/st7_intel_optmization/iso3dfd-st7/
 # Execute code
 echo "=============================="
 echo "Hill Climbing"
-/usr/bin/mpirun -np 4 -map-by ppr:1:socket:PE=8 -rank-by core python3 hill_climbing.py \
+/usr/bin/mpirun -np $nodes -map-by ppr:1:socket:PE=8 -rank-by core python3 hill_climbing.py \
     --max_stable_runs $max_stable_runs \
     --step_size $step_size
 echo "=============================="

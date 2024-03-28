@@ -14,6 +14,7 @@ cd ~/st7_intel_optmization/iso3dfd-st7/
 range_start=32
 range_end=256
 range_step=32
+nodes=8
 
 # Parse named arguments
 while [[ "$#" -gt 0 ]]; do
@@ -21,6 +22,7 @@ while [[ "$#" -gt 0 ]]; do
         --start) range_start="$2"; shift ;;
         --end) range_end="$2"; shift ;;
         --step) range_step="$2"; shift ;;
+        --nodes) nodes="$2"; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -28,8 +30,8 @@ done
 
 # Execute code
 echo "=============================="
-echo "Grid search on 4 nodes - no threads"
-/usr/bin/mpirun -np 4 -map-by ppr:1:socket:PE=8 -rank-by core python3 grid_search.py --start $range_start --end $range_end --step $range_step
+echo "Grid search"
+/usr/bin/mpirun -np $nodes -map-by ppr:1:socket:PE=8 -rank-by core python3 grid_search.py --start $range_start --end $range_end --step $range_step
 echo "=============================="
 
 

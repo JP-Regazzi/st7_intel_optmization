@@ -98,7 +98,7 @@ def display_menu():
     return choice
 
 def get_sbatch_parameters():
-    nodes = input(f"Enter the number of nodes (default: 1): ") or "1"
+    nodes = input(f"Enter the number of nodes (default: 8): ") or "8"
     tasks_per_node = str(int(nodes)*32)
     partition = input(f"Enter the partition (default: cpu_prod): ") or "cpu_prod"
     qos = input(f"Enter the QOS (default: 8nodespu): ") or "8nodespu"
@@ -169,7 +169,7 @@ def main():
             except FileNotFoundError:
                 pass
             command = ['sbatch', '-N', nodes, '-n', tasks_per_node, '-p', partition, f'--qos={qos}',
-                    f'--output={script_name.replace(" ", "")}.txt', script_path] + selected_arguments
+                    f'--output={script_name.replace(" ", "")}.txt', script_path, '--nodes', nodes] + selected_arguments
 
             try:
                 result = subprocess.run(command, capture_output=True, text=True, shell=False)
