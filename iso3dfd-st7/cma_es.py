@@ -41,7 +41,7 @@ def parallel_cma_es(comm, sigma, population_size, bounds_legacy, compilation):
         candidates = np.clip(candidates, bounds[0], bounds[1])
         
         try:
-            fitnesses = [objective(candidate) for candidate in candidates]
+            fitnesses = [objective(candidate, compilation) for candidate in candidates]
             process_call_count += len(candidates)
         except Exception as e:
             print(f"Process {rank} - Exception occurred during candidate evaluation: {str(e)}")
