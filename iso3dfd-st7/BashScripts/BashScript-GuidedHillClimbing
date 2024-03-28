@@ -28,7 +28,7 @@ cd ~/st7_intel_optmization/iso3dfd-st7/
 # Execute code
 echo "=============================="
 echo "Guided Hill"
-/usr/bin/mpirun -np $nodes -map-by ppr:1:socket:PE=8 -rank-by core python3 guided_hill_climbing.py \
+/usr/bin/mpirun -np $nodes -map-by ppr:1:node:PE=16 -rank-by node python3 guided_hill_climbing.py \
     --max_stable_runs $max_stable_runs \
     --step_size $step_size
 echo "=============================="
