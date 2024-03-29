@@ -39,8 +39,8 @@ scripts = {
     },
     "CMA-ES": {
         "filename": "BashScript-CMA-ES",
-        "args": ["--sigma", "--population_size", "--lower_bound", "--upper_bound", '--compilation'],
-        "default_args": ["8", "4", "32", "256", "O3"]
+        "args": ["--sigma", '--compilation', '--seed'],
+        "default_args": ["8", "O3", "42"]
     },
 }
 

@@ -9,6 +9,7 @@ while [[ "$#" -gt 0 ]]; do
         --upper_bound) upper_bound="$2"; shift ;;
         --nodes) nodes="$2"; shift ;;
         --compilation) compilation="$2"; shift ;;
+        --seed) seed="$2"; shift ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -21,6 +22,7 @@ lower_bound=${lower_bound:-32}
 upper_bound=${upper_bound:-256}
 nodes=${nodes:-8} # Set default nodes value if not provided
 compilation=${compilation:-"O3"}
+seed=${seed:-42}
 
 # Source
 source /etc/profile
@@ -39,5 +41,6 @@ echo "CMA-ES"
     --sigma $sigma \
     --lower_bound $lower_bound \
     --upper_bound $upper_bound \
-    --compilation $compilation
+    --compilation $compilation \
+    --seed $seed
 echo "=============================="

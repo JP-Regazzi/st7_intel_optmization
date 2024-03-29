@@ -18,7 +18,7 @@ def hill_climbing(initial_parameters, step_size, max_stable_runs):
 
     current_parameters = initial_parameters
     i, j, k = current_parameters[0], current_parameters[1], current_parameters[2]
-    current_gflops, number_of_runs = run_process_parametrized(i, j, k), number_of_runs + 1
+    current_gflops, number_of_runs = run_process_parametrized(current_parameters), number_of_runs + 1
 
     while True:
 
