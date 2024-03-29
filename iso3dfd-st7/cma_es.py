@@ -17,21 +17,21 @@ def objective(x, compilation):
     x_scaled = i_sixteened, j, k
     return -starter.run_process_parametrized(x_scaled, compilation)
 
-def parallel_cma_es(comm, sigma, population_size, bounds_legacy, compilation):
+def parallel_cma_es(comm, sigma, population_size, bounds_legacy, compilation, seed):
     rank = comm.Get_rank()
     size = comm.Get_size()
 
     np.random.seed(rank)
 
-    bounds_x, bounds_y, bounds_z = (16, 256), (16, 256), (16, 256)
+    bounds_x, bounds_y, bounds_z = (16, 256), (1, 256), (1, 256)
     bounds_list = [bounds_x, bounds_y, bounds_z]
     bounds = [[bounds_x[0], bounds_y[0], bounds_z[0]], [bounds_x[1], bounds_y[1], bounds_z[1]]]
 
-    initial_point = [np.random.randint(b[0], b[1]) for b in bounds_list]
+    initial_point = [np.random.randint(16, 256) for _ in range(3)]
 
     process_call_count = 0
 
-    es = cma.CMAEvolutionStrategy(initial_point, sigma, {'bounds': bounds, 'popsize':population_size})
+    es = cma.CMAEvolutionStrategy(initial_point, sigma, {'bounds': bounds, 'seed':seed})
     es.opts['bounds'] = bounds
 
     while not es.stop():
@@ -94,14 +94,17 @@ if __name__ == "__main__":
     parser.add_argument('--lower_bound', type=int, default=32, help='Lower bound')
     parser.add_argument('--upper_bound', type=int, default=256, help='Upper bound')
     parser.add_argument('--compilation', type=str, default='O3', help='Compilation type')
+    parser.add_argument('--seed', type=int, default=0, help='Seed for random number generation')
     args = parser.parse_args()
 
     sigma = args.sigma
     population_size = args.population_size
     compilation = args.compilation
+    seed = args.seed
+    np.random.seed(seed)
 
     bounds = np.array([[1, 16]] + [[args.lower_bound, args.upper_bound] for _ in range(2)])
 
     comm = MPI.COMM_WORLD
 
-    parallel_cma_es(comm, sigma, population_size, bounds, compilation)
+    parallel_cma_es(comm, sigma, population_size, bounds, compilation, seed)
